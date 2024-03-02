@@ -8,7 +8,7 @@ canvas.height =window.innerHeight;
 /*使用2D绘图 */
 const ctx =canvas.getContext('2d');
 /* 樱花数量 */
-const sakura_sum =60;
+const sakura_sum =40;
 const sakuraArr =[];
 
 /* sakura class */
@@ -70,7 +70,7 @@ function render(){
 }
 //加载图片
 const sakuraImg =new Image();
-sakuraImg.src = '../images/sakura.jpg';
+sakuraImg.src = './images/sakura.jpg';
 sakuraImg.addEventListener('load',()=>{
     for(let i=0;i<sakura_sum;++i){
         sakuraArr.push(new sakura());

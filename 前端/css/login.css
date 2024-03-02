@@ -1,3 +1,4 @@
+
 *{
     margin: 0;
     padding: 0;
@@ -11,7 +12,7 @@ body{
     justify-content: center;
     align-items: center;
     font-size: 12px ;
-    background-color: #f3f3f3;
+    background: #f3f3f3 url("../images/background.jpg");
     color: #a0a5a8;
 
 }
