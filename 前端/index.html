@@ -1,8 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>主页</title>
     <link rel="stylesheet" href="./css/common.css">
@@ -12,9 +12,18 @@
 <body>
     <div class="main" id ="main">
         <div class="Top-navigator" id="top">
-            <a  class="Top-title" href="index.html">
-                ****系统
-            </a>
+            <div class="Top-left">
+                <div class="Top-litem">
+                    <a href="#"><img src="./images/Top-title.jpg" alt=""></a>
+                </div>
+                <div class="Top-litem">
+                    <a href="#">博客</a>
+                </div>
+                <div class="Top-litem">
+                    <a href="#">社区</a>
+                </div>
+            </div>
+
 
 <!--  20240303          准备做一个搜索框. 用户栏,功能栏-->
             <div class ='Top-mid'>
@@ -26,7 +35,27 @@
             </div>
 
             <div class="Top-right">
-                <a href="" class="face" class="user-img"><img src="./images/user-img.jpg" alt=""></a>
+
+
+                <div class="Top-Ritem">
+                    <a href="" class="Top-publish">发布文章</a>
+                </div>
+                <div class="Top-Ritem us">
+                    <a href="" class="face user-img" ">
+                        <img src="./images/user-img.jpg" alt="">
+                    </a>
+                    <div class="Top-User-menu" >
+                        <h3>姓名<br>
+                            <span>管理员</span>
+                        </h3>
+                        <hr>
+                        <ul>
+                            <li><a href="#">个人中心</a></li>
+                            <li><a href="#">帮助</a></li>
+                            <li style="color:red"><a href="#">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
 
