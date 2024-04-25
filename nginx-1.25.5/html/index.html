@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>主页</title>
+    <link rel="stylesheet" href="./css/common.css">
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="./source/swiper/swiper-bundle.min.css">
+</head>
+<body>
+    <div class="main" id ="main">
+        <div class="Top-navigator" id="top">
+            <div class="Top-left">
+                <div class="Top-litem">
+                    <a href="#"><img src="./images/Top-title.jpg" alt=""></a>
+                </div>
+                <div class="Top-litem">
+                    <a href="#">博客</a>
+                </div>
+                <div class="Top-litem">
+                    <a href="#">社区</a>
+                </div>
+            </div>
+
+
+<!--  20240303          准备做一个搜索框. 用户栏,功能栏-->
+            <div class ='Top-mid'>
+                <i class="fa-brands fa-windows Top-item"></i>
+                <div class="search-box">
+                    <input type="text" class="search-btn" placeholder="搜索">
+                </div>
+                <i class="fa-solid fa-magnifying-glass Top-item"></i>
+            </div>
+
+            <div class="Top-right">
+
+
+                <div class="Top-Ritem">
+                    <a href="" class="Top-publish">发布文章</a>
+                </div>
+                <div class="Top-Ritem us">
+                    <a href="" class="face user-img" ">
+                        <img src="./images/user-img.jpg" alt="">
+                    </a>
+                    <div class="Top-User-menu" >
+                        <h3>姓名<br>
+                            <span>管理员</span>
+                        </h3>
+                        <hr>
+                        <ul>
+                            <li><a href="#">个人中心</a></li>
+                            <li><a href="#">帮助</a></li>
+                            <li style="color:red"><a href="#">退出登录</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="content-titles">
+<!--            轮播图-->
+        <div class="banner">
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper" id="banner">
+                    <div class="swiper-slide" id="slide1">
+                          <a href="#" id='slide1-url'>
+                           <img src="./images/SWIPER1-TEMP.png" alt="" id ='slide1-img'>
+                         <div class="info" id="slide1-info">
+                         【新】【YUZUSOFT】天使☆騒々 RE-BOOT! 天使☆骚骚 RE-BOOT!
+                         </div>
+                         </a>
+                    </div>
+                    <div class="swiper-slide" id="slide2">Slide 2</div>
+                    <div class="swiper-slide" id="slide3">Slide 3</div>
+                    <div class="swiper-slide" id="slide4">Slide 4</div>
+                    <div class="swiper-slide" id="slide5">Slide 5</div>
+                    <div class="swiper-slide" id="slide6">Slide 6</div>
+                    <div class="swiper-slide" id="slide7">Slide 7</div>
+                    <div class="swiper-slide" id="slide8">Slide 8</div>
+                    <div class="swiper-slide" id="slide9">Slide 9</div>
+                </div>
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+<!--            拟定做一个导航栏与内容栏-->
+            <div class="index-head">
+                <ul class="index-head-list">
+                    <li>关注</li>
+                    <li>推荐</li>
+                    <li>最新</li>
+                    <div class="list-box "></div>
+                </ul>
+            </div>
+            <hr>
+            <div class="index-info">
+<!--                主内容与精选框-->
+                <div class="item-list  clearfix">
+                    <div class="items">
+                        <div class="items-inner">
+                            <div class="items-content">
+                                <div class="items-info">
+                                    <a href="#">
+                                        <p class="item-head">主题</p>
+                                        <p class="item-se">介绍</p>
+                                    </a>
+                                    <div class="zan">
+                                        <div>
+                                            <div class="good">
+                                                <p class="hv-img ">
+                                                    <img src="./images/good.png" class="hv-img-h" alt="点赞">
+                                                    <span class="hv-c ">111赞</span>
+                                                </p>
+                                                <p class="hv-img">
+                                                <img src="images/bad.png" class="hv-img-h" alt="踩">
+                                                    <span class="hv-c ">踩</span>
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div class="editor">
+                                            <a href="#">
+                                                    <span>
+                                                        作者: XXX
+                                                    </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-left-img">
+                                    <a>
+                                        <img src="./images/background.jpg" >
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="items">
+                        <div class="items-inner">
+                            <div class="items-content">
+                                <div class="items-info">
+                                    <a href="#">
+                                        <p class="item-head">主题</p>
+                                        <p class="item-se">介绍</p>
+                                    </a>
+                                    <div class="zan">
+                                        <div>
+                                            <div class="good">
+                                                <p class="hv-img ">
+                                                    <img src="./images/good.png" class="hv-img-h" alt="点赞">
+                                                    <span class="hv-c ">111赞</span>
+                                                </p>
+                                                <p class="hv-img">
+                                                <img src="images/bad.png" class="hv-img-h" alt="踩">
+                                                    <span class="hv-c ">踩</span>
+                                                </p>
+                                            </div>
+
+                                        </div>
+                                        <div class="editor">
+                                            <a href="#">
+                                                    <span>
+                                                        作者: XXX
+                                                    </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="item-left-img">
+                                    <a>
+                                        <img src="./images/background.jpg" >
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="item-right">
+                    热门资讯
+                </div>
+
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+
+</body>
+
+
+
+<script src="./source/swiper/swiper-bundle.js"></script>
+<script src="https://kit.fontawesome.com/f23451c27c.js" crossorigin="anonymous"></script>
+<script src="./js/common.js"></script>
+<script src="./js/index.js"></script>
+
+</html>

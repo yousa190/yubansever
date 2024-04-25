@@ -1,0 +1,140 @@
+.content-titles{
+    margin: 0 20px;
+    background-color: rgb(255, 219, 219);
+    /*padding-top: 10px;*/
+}
+/*轮播图*/
+.banner{
+    width: 100%;
+    height: 425px;
+    justify-content: center;
+    background: #ffffffb2;
+
+}
+.swiper {
+    width: 70%;
+    height: 100%;
+    backdrop-filter: blur(14px) saturate(150%);
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #ffffffb2;
+
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.swiper-slide a {
+    position: relative;
+    background-color: #000;
+    display: block;
+    width:80%;
+    height: 100%;
+    object-fit: cover;
+}
+.swiper-slide a img{
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all .3s ease-out 0s;
+}
+.swiper-slide a .info{
+    text-indent: 2em;
+    text-align: left;
+    font-weight: 800;
+    color: rgb(232, 230, 230);
+    left: 0;
+    bottom: 0;
+    position: absolute;
+    z-index: 10;
+    width: 100%;
+    height: 80px;
+    background-color: #04040594;
+}
+.swiper-slide a img:hover img{
+    transform: scale(0.94);
+    transition: all .3s ease-out 0s;
+}
+
+
+.index-head{
+    position: relative;
+    margin: 0 auto;
+    width: 100%;
+    height: 50px;
+    background-color: rgba(255,255,255,1);
+    float: left;
+}
+.index-head .index-head-list{
+    position: relative;
+    display: flex;
+    width: 40%;
+    height: 100%;
+    clear: both;
+
+}
+.index-head li{
+    font-size: 20px;
+    width:100%;
+    height: 100%;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    line-height: 48px;
+    cursor: pointer;
+}
+
+.index-head  .list-box{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: calc((100%/3)*1);
+    height: 8px;
+    border-radius: 2px;
+    transition: .5s;
+}
+.index-head ul li:nth-child(1):hover~.list-box{
+    left: calc(100%/3*0);
+    background-color: aqua;
+}
+.index-head ul li:nth-child(2):hover~.list-box{
+    left: calc(100%/3*1);
+    background-color: rgb(80, 74, 139);
+}
+.index-head ul li:nth-child(3):hover~.list-box{
+    left: calc(100%/3*2);
+    background-color: rgb(94, 99, 236);
+}
+
+.index-info{
+    width: 100%;
+}
+
+.item-list{
+    width: 70%;
+    background-color: #ffffff;
+    float: left;
+}
+.item-right{
+    width: 30%;
+    height: 50px;
+    background-color: #ffffff;
+    float: right;
+}
+
