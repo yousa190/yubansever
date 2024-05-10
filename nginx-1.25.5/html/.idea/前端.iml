@@ -8,5 +8,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="f23451c27c" level="application" />
+    <orderEntry type="library" name="@wangeditor/editor" level="application" />
+    <orderEntry type="library" name="axios" level="application" />
   </component>
 </module>

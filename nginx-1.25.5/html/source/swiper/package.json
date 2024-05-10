@@ -169,6 +169,7 @@
     "node": ">= 4.7.0"
   },
   "dependencies": {
+    "axios": "^1.6.8",
     "dom7": "^4.0.4",
     "ssr-window": "^4.0.2"
   }

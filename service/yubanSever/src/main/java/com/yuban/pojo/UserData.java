@@ -5,20 +5,23 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserData {
-    private Integer id;
+    private Integer user_id;
 
-    private String username;
+    private String user_name;
 
-    private String emaill;
 
-    private String pwd;
+    private String email;
 
-    private short gender;
+    private String img;
 
-    private String image;
+    private Date entry_date;
+
+    private Integer level;
 
 }

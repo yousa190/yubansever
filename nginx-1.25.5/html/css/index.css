@@ -1,5 +1,5 @@
 .content-titles{
-    margin: 0 20px;
+    margin: 0 10%;
     background-color: rgb(255, 219, 219);
     /*padding-top: 10px;*/
 }
@@ -132,9 +132,32 @@
     float: left;
 }
 .item-right{
-    width: 30%;
+
+    border-radius: 2px;
+    width: 20%;
     height: 50px;
     background-color: #ffffff;
-    float: right;
+    float: left;
+    border:  1px solid #f0f0f2 ;
+    border-top: none;
+}
+
+.item-right-title{
+    border-bottom: 1px solid #f0f0f2;
+    height: 48px;
+    box-shadow: 0 1px 0 0 #f0f0f2;
+    border-radius: 2px 2px 0 0;
+    line-height: 48px;
+    background: #fff;
+    padding: 0 24px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
 }
 
