@@ -3,11 +3,11 @@ package com.yuban.pojo;
 import java.util.Date;
 
 public class article {
-    private Integer art_id;
+    private Integer artId;
 
-    private Integer user_id;
+    private Integer userId;
 
-    private Date pub_date;
+    private Date pubDate;
 
     private String title;
 

@@ -5,23 +5,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserData {
-    private Integer user_id;
+    private Integer userId;
 
-    private String user_name;
-
+    private String userName;
 
     private String email;
 
+    private String pwd;
+
+    private Integer gender;
+
     private String img;
 
-    private Date entry_date;
+    private LocalDate entryDate;
 
     private Integer level;
+
+    public UserData(String user_name, String pwd, String email) {
+        this.userName = user_name;
+        this.pwd = pwd;
+        this.email = email;
+    }
 
 }
