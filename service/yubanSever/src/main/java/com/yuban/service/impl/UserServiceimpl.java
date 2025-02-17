@@ -49,4 +49,14 @@ public class UserServiceimpl implements UserService {
     public UserData getByemail(String email,String pwd) {
         return usermapper.get_msgByemail(email,pwd);
     }
+
+    @Override
+    public boolean reset(String email, String pwd) {
+        return usermapper.reset(email, pwd);
+    }
+
+    @Override
+    public Integer yanzheng(String name) {
+        return usermapper.yanzheng(name);
+    }
 }

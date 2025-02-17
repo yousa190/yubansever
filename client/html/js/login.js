@@ -1,5 +1,3 @@
-
-
 let swiCtn=document.querySelector('#change-btn');
 let sc1 =document.querySelector('#switch-tran-a');
 let sc2=document.querySelector('#switch-tran-b');
@@ -9,21 +7,33 @@ let acon =document.querySelector('#a-sign_container');
 let bcon =document.querySelector('#b-login_container');
 let allbtns =document.querySelectorAll('.submit');
 let getBtns =(e)=>e.preventDefault();
-
-
 let chan_f=0
+let cre=document.querySelector('#sign-create-form');
+let foun=document.querySelector('#sign-found-form');
+let reset=document.querySelector('#sign-reset-form');
+function change_resetpwd(bool){
+    if (bool===false){
+        foun.classList.remove('is-hidden');
+        reset.classList.add('is-hidden');
+
+    }
+    else{
+        reset.classList.remove('is-hidden');
+        foun.classList.add('is-hidden');
+    }
+    chan_f=0;
+}
+
 let changeF =(e)=> {
-   let cre=document.querySelector('#sign-create-form');
-   let foun=document.querySelector('#sign-found-form');
     if (chan_f===0){
         cre.classList.remove('is-hidden');
         foun.classList.add('is-hidden');
+        reset.classList.add('is-hidden');
     }
     // 账号找回
     else if (chan_f===1){
         cre.classList.add('is-hidden');
-        foun.classList.remove('is-hidden');
-        chan_f=0;
+        change_resetpwd(false);
     }
     swiCtn.classList.add('is-gx');
     setTimeout(()=>{
@@ -111,6 +121,8 @@ user_name.addEventListener('mouseleave',evt => {
 
 // 邮箱正则表达式
 const reg=/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+
 sign_email.addEventListener('mouseleave',evt => {
 
     if (sign_email.value!=null||sign_email.value!==''){
@@ -120,20 +132,20 @@ sign_email.addEventListener('mouseleave',evt => {
             axios.get(`http://localhost:8080/login/check_email`,
                 {
                     params:{
-                        user_email:sign_email.value
+                       email:sign_email.value
                     }
                 }
             ).then(res=>{
-                    if (res.data.data>0){
-                        s_f2=1
-                        warn_2.innerHTML='邮箱已经被使用!'
-                        warn_2.classList.remove('warn-hidden');
-                    }
-                    else  {
-                        s_f2=0
-                        warn_2.classList.add('warn-hidden')
-                    }
-                }).catch(e=> console.log(e))
+                if (res.data.data>0){
+                    s_f2=1
+                    warn_2.innerHTML='邮箱已经被使用!'
+                    warn_2.classList.remove('warn-hidden');
+                }
+                else  {
+                    s_f2=0
+                    warn_2.classList.add('warn-hidden')
+                }
+            }).catch(e=> console.log(e))
         }
         else{
             s_f2=1
@@ -142,6 +154,9 @@ sign_email.addEventListener('mouseleave',evt => {
         }
     }
 })
+
+
+
 
 let reg2=  /^(?=.*\d)(?=.*[A-Za-z]|.*[-+_!@#$%^&*.,?])[A-Za-z\d\-+_!@#$%^&*.,?]{6,}$/;
 
@@ -165,7 +180,7 @@ sign_pwd.addEventListener('mouseleave',evt => {
 // 提交注冊表单
 submit.addEventListener('click',evt => {
     let params = new FormData()
-    params.append('user_name',user_name.value)
+    params.append('userName',user_name.value)
     params.append('email',sign_email.value)
     params.append('pwd',sign_pwd.value)
     if (s_f1===0&&s_f2===0&&s_f3===0){
@@ -173,7 +188,7 @@ submit.addEventListener('click',evt => {
             headers: {'Content-Type': 'multipart/form-data'}
         })
             .then(e=>{
-                if(e.data==='true')tipevent('注冊成功','green');
+                if(e.data.data==='true')tipevent('注冊成功','green');
         }).catch(err=>{console.log(err)})
     }
     else{
@@ -223,23 +238,176 @@ document.querySelector('#login').addEventListener('click',e=>{
 
 // 密码找回
 
-axios.get('http://localhost:8080/email/code').then(res=>{
+function email_Check(email){
+    let warn_spe =document.getElementById('warn-spe');
+    // warn_spe.classList.add('warn-hidden')
+    if (email.value!==''&&reg.test(email.value)){
 
-}).catch(e=>{
+        //     进行检测
+            axios.get(`http://localhost:8080/login/yanzheng`,
+                {
+                    params:{
+                        email:email.value
+                    }
+                }
+            ).then(res=>{
+                console.log(res)
+                if (res.data.data===0){
+                    warn_spe.innerText='邮箱有误!'
+                    warn_spe.classList.remove('warn-hidden')
+                    return false;
+                }
+                else warn_spe.classList.add('warn-hidden')
+            }).catch(e=> console.log(e))
+    }else{
+        warn_spe.innerText='邮箱有误!'
+        warn_spe.classList.remove('warn-hidden')
+        return false;
+    }
+    return true;
+}
 
-})
+let foundemail=document.getElementById('found-2');
+let code=document.getElementById('code');
 let getCode=document.getElementById('get_code');
 let get_flag =1;
+
+
+// 设置按钮虚化
+function settime($obj, time) {
+    if (time == 0) {
+        $obj.setAttribute("disabled", false);
+        $obj.background= "#f38401";
+        $obj.cursor="pointer";
+        $obj.text("获取手机验证码");
+        return;
+    } else {
+        $obj.setAttribute("disabled", true);
+        $obj.background="#ccc";
+        $obj.cursor="not-allowed";
+        time--;
+    }
+    setTimeout(function () { settime($obj, time) }, 1000)
+}
+
+
 getCode.addEventListener('click' ,ev => {
-    if (get_flag===1){
-        let count =3;
+ if (get_flag===1 && email_Check(foundemail)){
+        let count =60;
         getCode.classList.add('grey');
         let te= setInterval(e=>{
             getCode.innerText=count;
             count--;
+            if(!count)clearInterval(te);
         },1000);
-        clearInterval(te);
-
-        getCode.classList.remove('grey');
+        getCode.innerText="获取验证码";
+        axios.get('http://localhost:8080/email/code', {
+            params:{
+                email:foundemail.value
+            }
+        }).then(res=>{
+            tipevent('发送成功','green');
+        }).catch(e=>{
+            tipevent('发送失败','red');
+        })
+        settime(getCode,60);
     }
 })
+
+let codeCheck=(code)=>{
+    let warnC=document.getElementById('warn-spe-b');
+    if (code.value==''||!code.value){
+        warnC.innerText='验证码为空!'
+        warnC.classList.remove('warn-hidden')
+    }
+    else warnC.classList.add('warn-hidden')
+}
+
+let finalemail=null;
+
+document.getElementById('find').addEventListener('click',ev => {
+    finalemail=foundemail.value;
+    if (code.value!=''){
+        let params = new FormData()
+        params.append('email',foundemail.value)
+        params.append('code',code.value)
+        axios.post('http://localhost:8080/login/find',params
+        ).then(res=>{
+            console.log(res)
+            if (res.data.errno===0){
+                tipevent(res.data.message,'red');
+            }
+            else if (res.data.errno===1){
+                tipevent(res.data.message,'green');
+                setTimeout(change_resetpwd(true),2000);
+            }
+        }).catch(e=>{
+            tipevent('请求失败!','red');
+        })
+    }
+    else{
+        email_Check(foundemail.value)
+        codeCheck(code);
+    }
+})
+
+let finalPwd=null;
+// 密码重设
+let resetCheck=()=>{
+    let resP1=document.getElementById('reset-1');
+    let resP2=document.getElementById('reset-2');
+    let resWarn1=document.getElementById('warn-reset-1');
+    let resWarn2=document.getElementById('warn-reset-2');
+    let f1 =0;
+    let f2 =0;
+    if (resP1.value){
+        if (reg2.test(resP1.value)){
+            resWarn1.classList.add('warn-hidden')
+        }
+        else {
+            resWarn1.innerHTML=!resP1.value?'密码为空!':'密码太简单!'
+            resWarn1.classList.remove('warn-hidden')
+            f1=1;
+        }
+    }
+    else {
+        resWarn1.classList.add('warn-hidden')
+    }
+
+    if (resP2.value){
+        if (resP1.value!==resP2.value){
+            resWarn2.innerHTML='密码不同!';
+            resWarn2.classList.remove('warn-hidden');
+            f2=1;
+        }
+        else{
+            resWarn2.classList.add('warn-hidden');
+        }
+    }
+
+    if (f1===0&&f2===0){
+        finalPwd=resP1.value;
+        return true;
+    }
+
+    return false;
+}
+
+document.getElementById('resetcheck').addEventListener('click',ev => {
+    if (resetCheck()){
+        let params=new FormData();
+        params.set('email','19959771806@163.com');
+        params.set('pwd',finalPwd);
+       axios.post('http://localhost:8080/login/reset', params)
+           .then(res=>{
+               console.log(res)
+               if (res.data.data===true){
+                   tipevent('登陆成功','green');
+               }
+               else  tipevent('登陆失败','red');
+           })
+           .catch(err=>{
+               tipevent('登陆失败','red');
+       })
+    }
+});

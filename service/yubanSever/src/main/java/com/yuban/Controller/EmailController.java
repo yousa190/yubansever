@@ -4,6 +4,7 @@ package com.yuban.Controller;
 import com.yuban.pojo.Result;
 
 import cn.hutool.core.util.RandomUtil;
+import com.yuban.service.UserService;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,10 @@ public class EmailController {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    @Autowired
+    private UserService userService;
+
+
 
     @Value("${spring.mail.username}")
     private String sender;
@@ -36,6 +41,7 @@ public class EmailController {
 
     @GetMapping("/code")
     public Result GetCode(@RequestParam String email){
+
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setFrom(nickname+'<'+sender+'>');

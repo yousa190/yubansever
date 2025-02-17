@@ -4,11 +4,12 @@ import com.yuban.pojo.UserData;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface UserService {
+public interface UserService  {
 
     Integer count_name(String user_name);
 
     Integer count_email(String userEmail);
+    Integer yanzheng(String name);
 
     boolean sign(String userName, String emaill, String pwd);
 
@@ -20,4 +21,6 @@ public interface UserService {
     UserData getByName(String name,String pwd);
 
     UserData getByemail(String name,String pwd);
+
+    boolean reset(String email, String pwd);
 }

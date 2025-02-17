@@ -1,13 +1,13 @@
 package com.yuban.Mapper;
 
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.yuban.pojo.UserData;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
+import org.glassfish.pfl.basic.fsm.Guard;
 
 @Mapper
-public interface Usermapper  {
+public interface Usermapper  extends BaseMapper<UserData> {
 
     @Select("select count(user_id) from yubandata.user where user_name=#{user_name} ")
     Integer count_name(String user_name);
@@ -30,4 +30,9 @@ public interface Usermapper  {
     @Select("select * from yubandata.user where email=#{name}")
     boolean check_email(String name);
 
+    @Select("select count(user_id) from yubandata.user where email=#{name}")
+    Integer  yanzheng(String name);
+
+    @Update("UPDATE yubandata.user set  pwd=#{pwd}  where email=#{email} ")
+    boolean reset(String email, String pwd);
 }

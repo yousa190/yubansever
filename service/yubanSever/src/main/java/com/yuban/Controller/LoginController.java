@@ -31,9 +31,9 @@ public class LoginController {
         return  Result.success(userService.count_name(user_name));
     }
 
-    @GetMapping("/check_email{user_email}")
-    public Result check_email(@RequestParam String user_email){
-        return  Result.success(userService.count_email(user_email));
+    @GetMapping("/check_email{email}")
+    public Result check_email(@RequestParam String email){
+        return  Result.success(userService.count_email(email));
     }
 
 //    注冊事件
@@ -74,7 +74,7 @@ private static boolean containsAtSymbol(String input) {
 
 //    密码找回
     @PostMapping("/find")
-    public Result find(@RequestParam String code,String email){
+    public Result find( String code,String email){
 
         String emailKey  = "email_code_"+email;
 
@@ -85,6 +85,17 @@ private static boolean containsAtSymbol(String input) {
         }else {
             return Result.error("验证失败");
         }
+    }
+
+//    验证邮箱
+    @GetMapping("/yanzheng")
+    public Result Yz(@RequestParam String email){
+        return Result.success(userService.yanzheng(email));
+    }
+
+    @PostMapping("/reset")
+    public Result reset(String email ,String pwd){
+        return Result.success(userService.reset(email,pwd));
     }
 
 }

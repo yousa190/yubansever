@@ -153,9 +153,9 @@ body{
    color: #3399ea;
     cursor: pointer;
     right: 21%;
-    top: 59.3%;
+    top: 60%;
     line-height: 24px;
-    padding: 1px 5px;
+    padding: 0 5px;
     margin: 0 auto;
     justify-content: center;
     text-align: center;
@@ -170,17 +170,10 @@ body{
     border: 1px solid transparent;
 }
 
-.grey{
-    color: #a0a5a8;
-}
-
-
-
-
-
 .warn{
     font-size: 10px;
     color: red;
+    height: 10px;
 }
 .warn-hidden{
     visibility: hidden;
