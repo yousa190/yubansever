@@ -1,68 +1,3 @@
-
-<template >
-  <el-row class="home" :gutter="20">
-    <el-col :span="8" style="margin-top:20px ">
-<!--   user_table   -->
-      <el-card shadow="hover" class="usr_table">
-        <div class="user_info">
-          <img :src="getImgurl('user-img')" class="user_info">
-          <div class="user-detail">
-            <p class="uname">name</p>
-            <p class="ujob">job</p>
-          </div>
-        </div>
-        <div class="login-info">
-            <p>上次登陆时间: <span>???</span></p>
-            <p>上次登陆地点: <span>???</span></p>
-        </div>
-      </el-card>
-<!--   recent order-->
-      <el-card shadow="hover" class="usr_table">
-        <el-table :data="tableData">
-          <el-table-column
-              v-for="(val ,index) in  labelData"
-              :key="index"
-              :prop="index"
-              :label="val"
-          >
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </el-col>
-
-    <el-col :span="16" style="margin-top:20px ">
-      <div class="items">
-      <el-card
-        :body-style="{ display: 'flex',padding: 0  }"
-        v-for=" item in countData"
-        :key="item.name">
-        <component
-        :is="item.icon" class="item-icons"
-        :style="{ background: item.color  }"
-        ></component>
-        <div class="detail">
-          <p class="num">${{item.value}}</p>
-          <p class="txt">${{item.name}}</p>
-        </div>
-      </el-card>
-      </div>
-      <el-card class="home_chart">
-        <div ref="echart" style="height: 280px"></div>
-      </el-card>
-
-      <div class="graph">
-        <el-card>
-          <div ref="userchart" style="height: 240px"></div>
-        </el-card>
-        <el-card>
-          <div ref="videochart" style="height: 240px"></div>
-        </el-card>
-      </div>
-    </el-col>
-  </el-row>
-
-</template>
-
 <script setup >
 
 import {computed, ref,getCurrentInstance,onMounted,reactive} from "vue";
@@ -71,9 +6,9 @@ const {proxy} =getCurrentInstance()
 
 
 
-    const getImgurl=(user)=>{
-      return new URL(`../assets/images/${user}.jpg`,import.meta.url).href;
-    }
+const getImgurl=(user)=>{
+  return new URL(`../assets/images/${user}.jpg`,import.meta.url).href;
+}
 
 /* 20250121 :  后面可以实现一个最近的订单展示  */
 
@@ -133,35 +68,35 @@ const pieOptions =reactive({
   series:[],
 })
 /* render  the table */
-    const labelData=ref({
-      name:"商品名",
-      count:"数量",
-      price: "商品单价",
-      total: "总价"
-    })
-    const tableData = ref([
-      {
-        name: "doll",
-        count: 100,
-        price: 20.0,
-        total: 11
-      },
-      {
-        name: "doll",
-        count: 100,
-        price: 20.0,
-        total: 11
-      },
-      {
-        name: "doll",
-        count: 100,
-        price: 20.0,
-        total: 11
-      }
-    ])
-    const countData = ref([])
-    const chartData =ref([])
-    const observer =ref(null)
+const labelData=ref({
+  name:"商品名",
+  count:"数量",
+  price: "商品单价",
+  total: "总价"
+})
+const tableData = ref([
+  {
+    name: "doll",
+    count: 100,
+    price: 20.0,
+    total: 11
+  },
+  {
+    name: "doll",
+    count: 100,
+    price: 20.0,
+    total: 11
+  },
+  {
+    name: "doll",
+    count: 100,
+    price: 20.0,
+    total: 11
+  }
+])
+const countData = ref([])
+const chartData =ref([])
+const observer =ref(null)
 
 const getTableD =async () => {
   const data = await proxy.$api.getTableData();
@@ -184,7 +119,7 @@ const getChartD =async () => {
       type: "line"
     }
   })
- const aEcharts = echarts.init(proxy.$refs['echart'])
+  const aEcharts = echarts.init(proxy.$refs['echart'])
   aEcharts.setOption(xOption)
 
   //
@@ -234,6 +169,73 @@ onMounted(()=>{
 
 
 </script>
+
+
+<template >
+  <el-row class="home" :gutter="20">
+    <el-col :span="8" style="margin-top:20px ">
+<!--   user_table   -->
+      <el-card shadow="hover" class="usr_table">
+        <div class="user_info">
+          <img :src="getImgurl('user-img')" class="user_info">
+          <div class="user-detail">
+            <p class="uname">你好! name</p>
+            <p class="ujob">job</p>
+          </div>
+        </div>
+        <div class="login-info">
+            <p>上次登陆时间: <span>???</span></p>
+            <p>上次登陆地点: <span>???</span></p>
+        </div>
+      </el-card>
+<!--   recent order-->
+      <el-card shadow="hover" class="usr_table">
+        <el-table :data="tableData">
+          <el-table-column
+              v-for="(val ,index) in  labelData"
+              :key="index"
+              :prop="index"
+              :label="val"
+          >
+          </el-table-column>
+        </el-table>
+      </el-card>
+    </el-col>
+
+    <el-col :span="16" style="margin-top:20px ">
+      <div class="items">
+      <el-card
+        :body-style="{ display: 'flex',padding: 0  }"
+        v-for=" item in countData"
+        :key="item.name">
+        <component
+        :is="item.icon" class="item-icons"
+        :style="{ background: item.color  }"
+        ></component>
+        <div class="detail">
+          <p class="num">${{item.value}}</p>
+          <p class="txt">${{item.name}}</p>
+        </div>
+      </el-card>
+      </div>
+      <el-card class="home_chart">
+        <div ref="echart" style="height: 280px"></div>
+      </el-card>
+
+      <div class="graph">
+        <el-card>
+          <div ref="userchart" style="height: 240px"></div>
+        </el-card>
+        <el-card>
+          <div ref="videochart" style="height: 240px"></div>
+        </el-card>
+      </div>
+    </el-col>
+  </el-row>
+
+</template>
+
+
 
 <style scoped lang="less">
     .home{

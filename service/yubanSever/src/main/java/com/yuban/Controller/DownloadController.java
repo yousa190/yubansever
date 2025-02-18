@@ -4,6 +4,7 @@ package com.yuban.Controller;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.jdbc.Null;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.system.ApplicationHome;
@@ -14,50 +15,53 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+@Slf4j
 @RestController
 @RequestMapping("")
 public class DownloadController {
 
-    @RequestMapping("/images/{filename}")
-    public void downloadimg(@PathVariable String filename, HttpServletRequest request,HttpServletResponse response){
-        //        获取路径
-        ApplicationHome applicationHome =new ApplicationHome(this.getClass());
-        String temp2 =applicationHome.getDir().getParentFile().getParentFile().getAbsolutePath()+"\\src\\main\\resources\\datas\\images\\";
+    @Value("${upload.path}") // 从配置文件中读取上传路径
+    private String downloadPath;
 
+    @RequestMapping("/images/{type}/{filename}")
+    public void downloadimg(@PathVariable String type,@PathVariable String filename, HttpServletRequest request,HttpServletResponse response){
+        // 获取文件路径
+        Path filePath = Paths.get(downloadPath, "images", type, filename);
+        File file = filePath.toFile();
+        // 检查文件是否存在
+        if (!file.exists()) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND); // 返回 404 错误
+            return ;
+        }
 
-        try{
-            writeF(response, new java.io.File(temp2+filename));
-        }catch (Exception e){
-            e.printStackTrace();
+        // 下载文件
+        try {
+            writeF(response, file);
+        } catch (Exception e) {
+            log.error("文件下载失败", e); // 使用日志框架
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 返回 500 错误
         }
     }
 
-    public void writeF(HttpServletResponse res, java.io.File file){
-        FileInputStream f=null;
-        InputStream bf= null;
-        try{
-            f=new FileInputStream(file);
-            bf=new BufferedInputStream(f);
-            byte[] bytes=new byte[bf.available()];
-            bf.read(bytes);
-            bf.close();
-            // 清空response
-            res.reset();
-            // 设置response的Header
-            res.setCharacterEncoding("UTF-8");
-            //Content-Disposition的作用：告知浏览器以何种方式显示响应返回的文件，用浏览器打开还是以附件的形式下载到本地保存
-            //attachment表示以附件方式下载   inline表示在线打开   "Content-Disposition: inline; filename=文件名.mp3"
-            // filename表示文件的默认名称，因为网络传输只支持URL编码的相关支付，因此需要将文件名URL编码后进行传输,前端收到后需要反编码才能获取到真正的名称
-            res.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
-            // 告知浏览器文件的大小
-            res.addHeader("Content-Length", "" + file.length());
-            OutputStream outputStream = new BufferedOutputStream(res.getOutputStream());
-            res.setContentType("application/octet-stream");
-            outputStream.write(bytes);
+    public void writeF(HttpServletResponse res, java.io.File file)throws IOException{
+        // 设置响应头
+        res.setCharacterEncoding("UTF-8");
+        res.addHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(file.getName(), "UTF-8"));
+        res.addHeader("Content-Length", "" + file.length());
+        res.setContentType("application/octet-stream");
+
+        // 分块读取和写入文件
+        try (InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+             OutputStream outputStream = new BufferedOutputStream(res.getOutputStream())) {
+            byte[] buffer = new byte[1024 * 1024 *8]; // 8MB 缓冲区
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
             outputStream.flush();
-        }catch (Exception e){
-            e.printStackTrace();
         }
     }
 

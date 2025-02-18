@@ -1,9 +1,11 @@
 spring:
+
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/?user=yuban
+    url: jdbc:mysql://localhost:3306/?user=yuban&db=bms
     username: yuban
     password: 530227177
+
   servlet:
     multipart:
       max-file-size: 1024MB
@@ -34,7 +36,6 @@ spring:
 
 
 
-
 server:
   port: 8080
   tomcat:
@@ -48,3 +49,6 @@ mybatis-plus:
     useGeneratedKeys: true
 
 
+#上传路径
+upload:
+  path: ${user.dir}\yubanSever\datas

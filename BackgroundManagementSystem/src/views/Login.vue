@@ -23,6 +23,16 @@ const handleLogin = async () => {
   router.push('/home')
 
 };
+const loginForm =reactive({
+  name:'',
+  id:'',
+  pwd:'',
+})
+const goToreg =()=>{
+  router.push('/register')
+}
+
+
 const renderCanvas =()=>{
   //画布
   const canvas =document.querySelector('canvas');
@@ -111,11 +121,7 @@ const renderCanvas =()=>{
   window.addEventListener('mousemove',touchHeader);
   window.addEventListener('touchmove',touchHeader);
 }
-const loginForm =reactive({
-  name:'',
-  id:'',
-  pwd:'',
-})
+
 
 
 onMounted(()=> {
@@ -137,7 +143,7 @@ renderCanvas();
           <el-input
               class="anim2"
               v-model="loginForm.id"
-              placeholder="请输入账号"
+              placeholder="请输入邮箱或名称"
           >
             <template #suffix>
               <el-icon><User /></el-icon>
@@ -161,7 +167,7 @@ renderCanvas();
         <!-- 登录按钮 -->
         <el-form-item >
           <el-button class="anim2" type="primary" @click="handleLogin">登录</el-button>
-          <el-button class="anim2" type="info">注册</el-button>
+          <el-button class="anim2" type="info" @click="goToreg">注册</el-button>
         </el-form-item>
 
 
@@ -204,7 +210,7 @@ canvas {
   z-index: 1000; /* 确保登录框位于最上层 */
   width: 30%;
   max-width: 450px;
-  margin: 100px auto; /* 居中显示 */
+  margin: 15% auto; /* 居中显示 */
   padding: 35px 30px;
   background: rgba(255, 255, 255, 0.168); /* 半透明背景，让樱花效果可见 */
   text-align: center;

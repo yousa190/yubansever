@@ -12,7 +12,7 @@ export default {
         return request({
             url:'/home/tabledata',
             method:"get",
-            mock: false,
+            mock: true,
             data:{}
         })
     },
@@ -20,7 +20,7 @@ export default {
         return request({
             url:'/home/countdata',
             method:"get",
-            mock: false,
+            mock: true,
             data:{}
         })
     },
@@ -28,7 +28,7 @@ export default {
         return request({
             url:'/home/chartdata',
             method:"get",
-            mock: false,
+            mock: true,
             data:{}
         })
     },
@@ -36,7 +36,7 @@ export default {
         return request({
             url:'/home/userinfodata',
             method:"get",
-            mock: false,
+            mock: true,
             data:data,
         })
     },
@@ -44,7 +44,7 @@ export default {
         return request({
             url:'/home/deleteuser',
             method:"get",
-            mock: false,
+            mock: true,
             data:data,
         })
     },
@@ -52,7 +52,7 @@ export default {
         return request({
             url:'/home/adduser',
             method:"post",
-            mock: false,
+            mock: true,
             data:data,
         })
     },
@@ -60,7 +60,7 @@ export default {
         return request({
             url:'/home/edituser',
             method:"post",
-            mock: false,
+            mock: true,
             data:data,
         })
     },
@@ -68,9 +68,16 @@ export default {
         return request({
             url:'/permission/getmenu',
             method:"post",
-            mock: false,
+            mock: true,
             data:params,
         })
     },
-
+    getEmailCode(data){
+        return request({
+            url:'/email/code',
+            method:"get",
+            mock: false,
+            data:data,
+        })
+    }
 }

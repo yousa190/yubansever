@@ -7,6 +7,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'main',
+      redirect:'login',
       component: () => import('@/views/main.vue'), // 懒加载主布局组件
       children: [
         // {
@@ -35,6 +36,11 @@ const router = createRouter({
       path: '/404',
       name: '404',
       component: () => import('@/views/404.vue'),
+    },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/views/Register.vue'),
     },
   ],
 });

@@ -34,12 +34,12 @@ function isRouteExists(to) {
 }
 
 router.beforeEach((to, from) => {
-    if (to.path !== '/login' && !store.state.token){
-        return { name :"login"}
-    }
+    const publicRoutes = ['/login', '/register']; // 定义公共路由
+    const isPublicRoute = publicRoutes.includes(to.path); // 判断当前路由是否为公共路由
 
-    if (!isRouteExists(to)){
-        return { name :"404", path : '/404' }
+    // 如果用户未登录且访问的不是公共路由，则跳转到登录页
+    if (!isPublicRoute && !store.state.token ) {
+        return { name: 'login' };
     }
 
 })

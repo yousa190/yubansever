@@ -32,7 +32,7 @@ service.interceptors.response.use(
 
         // 检查业务状态码
         if (code === SUCCESS_CODE) {
-            return data; // 返回实际数据
+            return data;  // 返回实际数据
         } else {
             // 弹出错误提示
             const errorMsg = msg || NETWORK_ERROR;
@@ -50,22 +50,21 @@ service.interceptors.response.use(
 
 
 function request(options){
+    console.log(options)
     options.method=options.method||"get";
     if(options.method.toLowerCase()==="get"){
         options.params=options.data;
     }
     // 处理mock
+
     let isMock = config.mock
     if(typeof options.mock !== "undefined"){}
      isMock = options.mock
 
     // 处理环境
-    if (config.env === 'prod'){
-        service.defaults.baseURL= config.baseApi;
-    }
-    else {
-        service.defaults.baseURL= isMock ? config.mockApi : config.baseApi;
-    }
+    service.defaults.baseURL= isMock ? config.mockApi : config.baseApi;
+
+
     return service(options);
 }
 

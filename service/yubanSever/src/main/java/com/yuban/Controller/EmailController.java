@@ -2,7 +2,6 @@ package com.yuban.Controller;
 
 
 import com.yuban.pojo.Result;
-
 import cn.hutool.core.util.RandomUtil;
 import com.yuban.service.UserService;
 import jakarta.annotation.Resource;

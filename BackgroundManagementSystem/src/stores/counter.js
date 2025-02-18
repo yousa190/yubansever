@@ -42,8 +42,6 @@ export const useAllDataStore = defineStore('allData', () => {
       state.value.menuList = val
   }
 
-
-
     /**
      * 动态加载菜单并添加到路由
      * @param {Object} router - Vue Router 实例
@@ -87,7 +85,7 @@ export const useAllDataStore = defineStore('allData', () => {
 
         // 清除之前的动态路由
         router.getRoutes().forEach((item) => {
-            if (item.name=='main' || item.name=='login'||item.name=='404') {
+            if (item.name=='main' || item.name=='login'||item.name=='404'||item.name=='register') {
                 return
             }else{
                 router.removeRoute(item.name);

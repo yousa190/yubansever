@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user")
+@TableName("sys_user")
 public class UserData {
 
     @TableId(type= IdType.AUTO)

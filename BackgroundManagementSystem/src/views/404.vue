@@ -3,15 +3,19 @@
     <div class="content">
       <h1 class="status-code">404</h1>
       <p class="message">抱歉，您访问的页面不存在...</p>
-      <router-link to="/home" class="go-home">返回主页</router-link>
+      <el-button @click="goHome" class="go-home">返回</el-button>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  name: "NotFound",
-};
+<script setup>
+import {useRouter} from 'vue-router'
+
+const router = useRouter()
+const goHome =  ()=>{
+  router.push('/')
+}
+
 </script>
 
 <style scoped>
