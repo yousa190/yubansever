@@ -28,21 +28,21 @@ app.config.globalProperties.$api = api;
 store.addMenu(router, "refresh");
 
 // 路由守卫
-function isRouteExists(to) {
-    // 检查路由是否存在，可以通过 name 或 path
-    return router.getRoutes().filter((item=>item.path===to.path)).length > 0;
-}
-
-router.beforeEach((to, from) => {
-    const publicRoutes = ['/login', '/register']; // 定义公共路由
-    const isPublicRoute = publicRoutes.includes(to.path); // 判断当前路由是否为公共路由
-
-    // 如果用户未登录且访问的不是公共路由，则跳转到登录页
-    if (!isPublicRoute && !store.state.token ) {
-        return { name: 'login' };
-    }
-
-})
+// function isRouteExists(to) {
+//     // 检查路由是否存在，可以通过 name 或 path
+//     return router.getRoutes().filter((item=>item.path===to.path)).length > 0;
+// }
+//
+// router.beforeEach((to, from) => {
+//     const publicRoutes = ['/login', '/register']; // 定义公共路由
+//     const isPublicRoute = publicRoutes.includes(to.path); // 判断当前路由是否为公共路由
+//
+//     // 如果用户未登录且访问的不是公共路由，则跳转到登录页
+//     if (!isPublicRoute && !store.state.token ) {
+//         return { name: 'login' };
+//     }
+//
+// })
 
 // 注册插件
 app.use(router);

@@ -109,7 +109,9 @@ const handleMenu =(item)=>{
         </el-menu-item>
         <el-sub-menu  v-for="item in list2"
                       :key="item.path"
-                      :index="item.path">
+                      :index="item.path"
+
+        >
           <template #title>
             <component class="icons" :is="item.icon" ></component>
             <span>{{item.label}}</span>
@@ -149,15 +151,64 @@ const handleMenu =(item)=>{
   }
   .el-menu{
     border-right: none !important;
-    h1{
-      font-size: 20px;
-      line-height: 36px;
-      color: #fff;
+    /* 菜单项通用样式 */
+    .el-menu-item,
+    .el-sub-menu__title {
+      height: 80px !important;
+      line-height: 56px !important;
+      display: flex !important;
+      align-items: center;
+      transition: all 0.3s;
+
+      /* 图标样式 */
+      .icons {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+
+      /* 文字样式 */
+      span {
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    /* 子菜单展开箭头位置调整 */
+    .el-sub-menu__icon-arrow {
+      margin-top: -8px;
+    }
+
+    /* 菜单标题样式 */
+    h1 {
+      height: 80px;  /* 调整标题高度 */
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      margin: 0;
       text-align: center;
       overflow: hidden;
+      .favicon-icon {
 
+        width: 28px;
+        height: 28px;
+        object-fit: contain;
+        vertical-align: middle;
+      }
+      span {
+        color: white;
+        font-weight: bold;
+        line-height: 26px;
+        margin-left: 12px;
+        margin-top: 15px;
+        font-size: 16px;
+      }
     }
   }
+
+
   .el-aside{
     height: 100%;
     background-color: #545c6a;

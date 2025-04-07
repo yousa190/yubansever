@@ -1,6 +1,7 @@
 <script setup>
 import {getCurrentInstance, onMounted, reactive, ref} from "vue";
 import {useRouter} from "vue-router";
+import { debounce } from 'lodash';
 
 const router=useRouter()
 const form = reactive({
@@ -10,9 +11,9 @@ const form = reactive({
   email: '',
   phone: '',
   sex: "1",
-  resource: '',
-  desc: '',
 })
+
+
 const {proxy} =getCurrentInstance()
 const identifyCode = ref(''); // 验证码输入
 const IAgree = ref(false); // 同意状态
@@ -121,58 +122,82 @@ const reConf=()=>{
     });
 }
 
-const validateEmailStrict=(email)=> {
+const validateName= async()=>{
+    if (form.username) {
+      const res = await proxy.$api.checkName({name: form.username});
+      if (res) {
+        ElMessage.error({
+          id: 'name',
+          message: res,
+          duration: 1000,         // 不自动关闭
+        })
+      }
+    }
+}
+
+const validateEmailStrict= debounce( async (email)=>{
   const regex =  /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
 
   if (!form.email||form.email.length===0){
-    ElMessage.error('邮箱为空!');
+    ElMessage.error({
+      id:'mail',
+      message:'邮箱为空!'
+    });
     return false
   }
-  if ( !regex.test(email)){
+  else if ( !regex.test(email)){
     ElMessage.error({
+      id:'mail',
       message:"邮箱格式错误!",
       center:true,
       duration:2000,
     });
     return false
   }
+  // 是否已存在
+  else {
+    const msg=await proxy.$api.checkEmail({email: form.email,});
+    if (msg){
+      ElMessage.error({
+        id:'mail',
+        message: msg,
+        duration: 0,         // 不自动关闭
+        showClose: true,     // 显示关闭按钮（若默认不显示）
+      })
+      return false
+    }
+  }
   return true
-}
+},1000)
 
-const validatePhoneNumber=(phoneNumber)=>{
+const validatePhoneNumber=debounce ((phoneNumber)=>{
   // 定义正则表达式
   const phoneRegex = /^(?:\+?\d{1,3}[- ]?)?\(?\d{2,5}\)?[- ]?\d{3,5}[- ]?\d{3,4}$/;
   if (!form.phone||form.phone.length===0){
-    ElMessage.error('手机号为空!');
+    ElMessage.error({
+      id:'phone',
+      message:'手机号为空!'
+    });
   }
   // 测试输入的电话号码是否符合正则表达式
-  if (!phoneRegex.test(phoneNumber)){
+  else if (!phoneRegex.test(phoneNumber)){
     ElMessage.error({
+      id:'phone',
       message:"手机号格式错误!",
       center:true,
       duration:2000,
     });
-
   }
-}
+},1000)
 
 
-const clear=()=>{
-  form.username = '';
-  form.password = '';
-  form.rPassword = '';
-  form.email = '';
-  form.phone = '';
-  form.sex = '1';
-  identifyCode.value = '';
-  IAgree.value = false;
-}
+
 
 const getIdentifyCode =async () => {
-  if (isDisabled.value||!validateEmailStrict(form.email)) return; // 如果按钮被禁用，则不执行
+  if (isDisabled.value||!validateEmailStrict(form.email)) return false; // 如果按钮被禁用，则不执行
   // TODO: 这里添加获取验证码的逻辑，例如发送网络请求
     const msg= await proxy.$api.getEmailCode({email: form.email,}) ;
-    if (msg!=='发送成功')return
+    if (msg!=='发送成功')return false;
     ElMessage.success('发送成功!')
   // 设置按钮为禁用状态
   isDisabled.value = true;
@@ -185,6 +210,8 @@ const getIdentifyCode =async () => {
       isDisabled.value = false; // 启用按钮
     }
   }, 1000);
+
+  return true
 };
 
 const back=()=>{
@@ -202,17 +229,58 @@ const checkForm = () => {
   return { isValid: true }; // 返回有效状态
 };
 
-const handlesubmit=()=>{
+const handlesubmit = async () => {
   const validationResult = checkForm();
-  if (!validationResult.isValid&&!identifyCode) {
-    ElMessage.error(` 请填写所有必填项.`);
-    return
+  if (validationResult.isValid && identifyCode) {
+    // 调试输出
+    console.log('提交时验证码:', identifyCode);
+    console.log('表单数据:', JSON.parse(JSON.stringify(form)));
+
+    const formData = new FormData();
+    // 确保字段顺序正确
+    const fields = [
+      ['username', form.username],
+      ['email', form.email],
+      ['passwordHash', form.password],
+      ['sex', form.sex],
+      ['phone', form.phone],
+      ['code', identifyCode.value]
+    ];
+
+    fields.forEach(([key, value]) => {
+      if (!value) console.warn(`\(  {key} 值为空`);
+      formData.append(key, value);
+    });
+
+
+
+
+    try {
+      const res = await proxy.$api.register(formData);
+      if (res === "注册成功!")
+        ElMessage.success(res)
+        setTimeout(back, 3000);
+      }
+      else ElMessage.error(res);
+
+    } catch (error) {
+      ElMessage.error(`发送请求失败: ${error.message}`);
+    }
+  } else {
+    ElMessage.error('请填写所有必填项并输入验证码');
   }
-  ElMessage.success('正在注册...');
-  console.log(form, identifyCode)
+};
 
+const clear=()=>{
+  form.username = '';
+  form.password = '';
+  form.rPassword = '';
+  form.email = '';
+  form.phone = '';
+  form.sex = '1';
+  identifyCode.value = '';
+  IAgree.value = false;
 }
-
 onMounted(()=> {
   renderCanvas();
 })
@@ -229,7 +297,7 @@ onMounted(()=> {
       <el-divider></el-divider>
       <el-form :model="form" label-width="100px" style="max-width: 600px">
         <el-form-item label="用户名称:">
-          <el-input v-model="form.username" placeholder="请输入用户名称" prefix-icon="User" />
+          <el-input v-model="form.username" placeholder="请输入用户名称" prefix-icon="User" @blur="validateName" />
         </el-form-item>
 
         <el-form-item label="邮箱:">
@@ -313,6 +381,8 @@ canvas {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   z-index: 1000;
 }
+
+
 
 .header {
   text-align: center;

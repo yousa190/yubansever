@@ -7,11 +7,22 @@ const TOTAL_COUNT = 200;
 
 // 工具函数：解析 URL 参数
 function parseUrlParams(url) {
-    if (!url || !url.includes('?')) return {};
-    const searchParams = new URLSearchParams(url.split('?')[1]);
+    if (typeof url !== 'string' || !url.includes('?')) return {};
+    const queryIndex = url.indexOf('?');
+    const hashIndex = url.indexOf('#', queryIndex + 1);
+    const queryString = hashIndex === -1
+        ? url.slice(queryIndex + 1)
+        : url.slice(queryIndex + 1, hashIndex);
+    const searchParams = new URLSearchParams(queryString);
     const params = {};
     for (const [key, value] of searchParams.entries()) {
-        params[key] = value;
+        // 如需处理重复键，取消以下注释
+        // if (key in params) {
+        //     params[key] = Array.isArray(params[key]) ? [...params[key], value] : [params[key], value];
+        // } else {
+        //     params[key] = value;
+        // }
+        params[key] = value; // 默认行为：后出现的同名参数覆盖之前的
     }
     return params;
 }
@@ -28,12 +39,14 @@ let userList = [];
 for (let i = 0; i < TOTAL_COUNT; i++) {
     userList.push(
         Mock.mock({
-            id: Mock.Random.guid(),
-            name: Mock.Random.cname(),
-            addr: Mock.mock('@county(true)'),
-            'age|18-60': 1,
-            birth: Mock.Random.date(),
+            user_id: Mock.mock('@integer(1, 10000)'),
+            username:  Mock.mock('@cname'),
             sex: Mock.Random.integer(0, 1),
+            email: Mock.mock('@email'),
+            avatar:'http://localhost:8080/images/users/defaultAvatar.jpg',
+            last_login: Mock.Random.date(),
+            created_at: Mock.Random.date(),
+            level:Mock.Random.integer(1,2,3)
         })
     );
 }
@@ -46,13 +59,12 @@ export default {
      * @returns {Object} - 返回分页后的用户列表
      */
     getuserList(config) {
-        const { name, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = parseUrlParams(config.url);
+        const { username, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = parseUrlParams(config.url);
 
         // 过滤用户列表
-        const filteredList = name
-            ? userList.filter(user => user.name.includes(name))
+        const filteredList = username
+            ? userList.filter(user => user.username.includes(username))
             : userList;
-
         // 分页
         const paginatedList = paginate(filteredList, page, limit);
 
@@ -72,15 +84,16 @@ export default {
      * @returns {Object} - 返回操作结果
      */
     deleteUser(config) {
-        const { id } = parseUrlParams(config.url);
-        if (!id) {
+        const { user_id } = parseUrlParams(config.url);
+        const userId = parseInt(user_id, 10);
+        if (!user_id) {
             return {
                 code: -999,
                 msg: '参数错误',
             };
         }
 
-        userList = userList.filter(user => user.id !== id);
+        userList = userList.filter(user => user.user_id !== userId);
         return {
             code: 200,
             msg: '删除成功',
@@ -95,13 +108,13 @@ export default {
      */
     addUser(config) {
         try {
-            const { name, addr, age, birth, sex } = JSON.parse(config.body);
+            const { username, email, avatar, level, sex } = JSON.parse(config.body);
             userList.unshift({
-                id: Mock.Random.guid(),
-                name,
-                addr,
-                age,
-                birth,
+                user_id: Mock.mock('@integer(1, 10000)'),
+                username,
+                email,
+                avatar,
+                level,
                 sex,
             });
             return {
@@ -127,13 +140,13 @@ export default {
      */
     editUser(config) {
         try {
-            const { id, name, addr, age, birth, sex } = JSON.parse(config.body);
-            const user = userList.find(user => user.id === id);
+            const { user_id,username, email, avatar, level, sex } = JSON.parse(config.body);
+            const user = userList.find(user => user.user_id === user_id);
             if (user) {
-                user.name = name;
-                user.addr = addr;
-                user.age = age;
-                user.birth = birth;
+                user.username = username;
+                user.email = email;
+                user.avatar = avatar;
+                user.level = level;
                 user.sex = parseInt(sex);
             }
             return {

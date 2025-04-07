@@ -18,13 +18,6 @@ export default {
                             url: 'Home'
                         },
                         {
-                            path: '/mall',
-                            name: 'mall',
-                            label: "商品管理",
-                            icon: 'video-play',
-                            url: 'Mall'
-                        },
-                        {
                             path: '/user',
                             name: 'user',
                             label: "用户管理",
@@ -32,27 +25,86 @@ export default {
                             url: 'User'
                         },
                         {
-                            path: '/other',
-                            name: 'other',
-                            label: "其他",
-                            icon: 'location',
+                            path: '/mall',
+                            name: 'mall',
+                            label: "商品管理",
+                            icon: 'Handbag',
                             children: [
                                 {
-                                    path: '/page1',
-                                    name: 'page1',
-                                    label: "第一页",
-                                    icon: 'setting',
-                                    url: 'Page1'
+                                    path: 'list',
+                                    name: 'list',
+                                    label: "商品列表",
+                                    icon: 'ShoppingBag',
+                                    url: 'Mall',
                                 },
                                 {
-                                    path: '/page2',
-                                    name: 'page2',
-                                    label: "第二页",
-                                    icon: 'setting',
-                                    url: 'Page2'
+                                    path: 'config',
+                                    name: 'config',
+                                    label: "分类参数",
+                                    icon: 'Operation',
+                                    url: 'Mallconf'
+                                },
+                                {
+                                    path: 'categories',
+                                    name: 'categories',
+                                    label: "商品分类",
+                                    icon: 'Filter',
+                                    url: 'Categories'
                                 },
                             ]
-                        }],
+                        },
+                        {
+                            path: '/rights',
+                            name: 'rights',
+                            label: "权限管理",
+                            icon: 'List',
+                            children: [
+                                {
+                                    path: 'rolelist',
+                                    name: 'rolelist',
+                                    label: "角色列表",
+                                    icon: 'Files',
+                                    url: 'Rolelist'
+                                },
+                                {
+                                    path: 'rightssetting',
+                                    name: 'rightssetting',
+                                    label: "权限管理",
+                                    icon: 'Lock',
+                                    url: 'Rights'
+                                },
+                            ]
+                        },
+                        // {
+                        //     path: '/other',
+                        //     name: 'other',
+                        //     label: "其他",
+                        //     icon: 'location',
+                        //     children: [
+                        //         {
+                        //             path: '/page1',
+                        //             name: 'page1',
+                        //             label: "第一页",
+                        //             icon: 'setting',
+                        //             url: 'Page1'
+                        //         },
+                        //         {
+                        //             path: '/page2',
+                        //             name: 'page2',
+                        //             label: "第二页",
+                        //             icon: 'setting',
+                        //             url: 'Page2'
+                        //         },
+                        //     ]
+                        // },
+                        {
+                            path: '/order',
+                            name: 'order',
+                            label: "订单管理",
+                            icon: 'Box',
+                            url: 'Order'
+                        },],
+
                     token: Mock.Random.guid(),
                     message: "登陆成功"
                 },

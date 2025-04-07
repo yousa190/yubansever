@@ -49,4 +49,5 @@ const handleClose =(tag,index)=>{
   .el-tag{
     margin-right: 15px;
   }
+
 </style>

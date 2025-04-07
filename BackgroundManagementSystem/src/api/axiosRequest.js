@@ -3,6 +3,7 @@ import axios from 'axios';
 import {ElMessage} from 'element-plus'
 import config from "@/config";
 
+// 创建 Axios 实例
 const service = axios.create({
     baseURL: config.baseApi
 })
@@ -18,6 +19,7 @@ service.interceptors.request.use(function (config) {
 // 常量定义
 const NETWORK_ERROR = 'Network Error'; // 统一的网络错误提示
 const SUCCESS_CODE = 200; // 成功的业务状态码
+const DATAERR_CODE = 400; // 成功的业务状态码
 
 // 响应拦截器
 service.interceptors.response.use(
@@ -28,14 +30,18 @@ service.interceptors.response.use(
             return Promise.reject(NETWORK_ERROR);
         }
 
-        const { code, data, msg } = response.data;
+        const { code, data, message } = response.data;
 
         // 检查业务状态码
         if (code === SUCCESS_CODE) {
             return data;  // 返回实际数据
-        } else {
+        }
+        else if (code === DATAERR_CODE) {
+            return message;
+        }
+        else {
             // 弹出错误提示
-            const errorMsg = msg || NETWORK_ERROR;
+            const errorMsg = message || NETWORK_ERROR;
             ElMessage.error(errorMsg);
             return Promise.reject(errorMsg); // 返回被拒绝的 Promise
         }

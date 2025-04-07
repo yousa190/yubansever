@@ -6,8 +6,16 @@
 
 import request from "@/api/axiosRequest.js";
 
-// request the home_left data
 export default {
+    getMenu(params){
+        return request({
+            url:'/permission/getmenu',
+            method:"post",
+            mock: true,
+            data:params,
+        })
+    },
+    // User
     getTableData(){
         return request({
             url:'/home/tabledata',
@@ -64,18 +72,78 @@ export default {
             data:data,
         })
     },
-    getMenu(params){
+
+
+    // mall
+    getGoodList(data){
         return request({
-            url:'/permission/getmenu',
-            method:"post",
+            url:'/good/goodlist',
+            method:"get",
             mock: true,
-            data:params,
+            data:data
         })
     },
+
+    addGood(data){
+        return request({
+            url:'/good/addgood',
+            method:"post",
+            mock: true,
+            data:data,
+        })
+    },
+    deleteGood(data){
+        return request({
+            url:'/good/deletegood',
+            method:"get",
+            mock: true,
+            data:data,
+        })
+    },
+
+    // Categories
+    getCateList(data){
+        return request({
+            url:'/mall/catelist',
+            method:"get",
+            mock: true,
+            data:data
+        })
+    },
+
+
+
+
+
+    // register and reset
     getEmailCode(data){
         return request({
             url:'/email/code',
             method:"get",
+            mock: false,
+            data:data,
+        })
+    },
+    checkEmail(data){
+        return request({
+            url:'/user/mailcheck',
+            method:"get",
+            mock: false,
+            data:data,
+        })
+    },
+    checkName(data){
+        return request({
+            url:'/user/namecheck',
+            method:"get",
+            mock: false,
+            data:data,
+        })
+    },
+    register(data){
+        return request({
+            url:'/user/register',
+            method:"post",
             mock: false,
             data:data,
         })

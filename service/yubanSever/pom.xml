@@ -51,6 +51,17 @@
             <version>3.0.3</version>
         </dependency>
 
+<!--      Spring Security  -->
+<!--        <dependency>-->
+<!--            <groupId>org.springframework.boot</groupId>-->
+<!--            <artifactId>spring-boot-starter-security</artifactId>-->
+<!--        </dependency>-->
+<!--      BCrypt  -->
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
+        </dependency>
         <!--        redis-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
