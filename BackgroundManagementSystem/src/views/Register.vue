@@ -253,11 +253,9 @@ const handlesubmit = async () => {
     });
 
 
-
-
     try {
       const res = await proxy.$api.register(formData);
-      if (res === "注册成功!")
+      if (res === "注册成功!"){
         ElMessage.success(res)
         setTimeout(back, 3000);
       }

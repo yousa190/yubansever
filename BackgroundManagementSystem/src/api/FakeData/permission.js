@@ -1,11 +1,21 @@
 import Mock from 'mockjs';
+import  i18n  from  '@/lang/vuei8n.js';
+// 获取国际化函数
+export function t(key) {
+    return i18n.t(key);
+}
 export default {
+
+
+
+
     getMenu: config => {
         const {id, pwd} = JSON.parse(config.body)
+
 //先判断用户是否存在
 //判断账号和密码是否对应
 //menuList用于后面做权限分配，也就是用户可以展示的菜单
-        if (id === 'admin' && pwd === 'admin') {
+
             return {
                 code: 200,
                 data: {
@@ -13,135 +23,90 @@ export default {
                         {
                             path: '/home',
                             name: 'home',
-                            label: "首页",
+                            label: t('menu.home'), // 使用 $t() 国际化
                             icon: 'house',
-                            url: 'Home'
+                            url: 'Home',
+                            labelkey:'menu.home'
                         },
                         {
                             path: '/user',
                             name: 'user',
-                            label: "用户管理",
+                            label: t('menu.user'),
                             icon: 'user',
-                            url: 'User'
+                            url: 'User',
+                            labelkey:'menu.user'
                         },
                         {
                             path: '/mall',
                             name: 'mall',
-                            label: "商品管理",
+                            label: t('menu.mall'),
                             icon: 'Handbag',
+                            labelkey:'menu.mall',
                             children: [
                                 {
                                     path: 'list',
                                     name: 'list',
-                                    label: "商品列表",
+                                    label: t('menu.malllist'),
                                     icon: 'ShoppingBag',
                                     url: 'Mall',
+                                    labelkey:'menu.malllist'
                                 },
                                 {
                                     path: 'config',
                                     name: 'config',
-                                    label: "分类参数",
+                                    label: t('menu.mallconfig'),
                                     icon: 'Operation',
-                                    url: 'Mallconf'
+                                    url: 'Mallconf',
+                                    labelkey:'menu.mallconfig'
                                 },
                                 {
                                     path: 'categories',
                                     name: 'categories',
-                                    label: "商品分类",
+                                    label: t('menu.mallcategories'),
                                     icon: 'Filter',
-                                    url: 'Categories'
+                                    url: 'Categories',
+                                    labelkey:'menu.mallcategories'
                                 },
                             ]
                         },
                         {
                             path: '/rights',
                             name: 'rights',
-                            label: "权限管理",
+                            label: t('menu.rights'),
                             icon: 'List',
+                            labelkey:'menu.rights',
                             children: [
                                 {
                                     path: 'rolelist',
                                     name: 'rolelist',
-                                    label: "角色列表",
+                                    label: t('menu.rightsrolelist'),
                                     icon: 'Files',
-                                    url: 'Rolelist'
+                                    url: 'Rolelist',
+                                    labelkey:'menu.rightsrolelist',
                                 },
                                 {
                                     path: 'rightssetting',
                                     name: 'rightssetting',
-                                    label: "权限管理",
+                                    label: t('menu.rightsrightssetting'),
                                     icon: 'Lock',
-                                    url: 'Rights'
+                                    url: 'Rights',
+                                    labelkey:'menu.rightsrightssetting',
                                 },
                             ]
                         },
-                        // {
-                        //     path: '/other',
-                        //     name: 'other',
-                        //     label: "其他",
-                        //     icon: 'location',
-                        //     children: [
-                        //         {
-                        //             path: '/page1',
-                        //             name: 'page1',
-                        //             label: "第一页",
-                        //             icon: 'setting',
-                        //             url: 'Page1'
-                        //         },
-                        //         {
-                        //             path: '/page2',
-                        //             name: 'page2',
-                        //             label: "第二页",
-                        //             icon: 'setting',
-                        //             url: 'Page2'
-                        //         },
-                        //     ]
-                        // },
                         {
-                            path: '/order',
+                            path: '/order.js',
                             name: 'order',
-                            label: "订单管理",
+                            label: t('menu.order.js'),
                             icon: 'Box',
-                            url: 'Order'
-                        },],
+                            url: 'Order',
+                            labelkey:'menu.order.js',
+                        },
+                    ],
 
                     token: Mock.Random.guid(),
                     message: "登陆成功"
                 },
             }
-        }
-        else if (id === 'yuban' && pwd === 'yuban') {
-            return {
-                code: 200,
-                data: {
-                    menuList: [
-                        {
-                            path: '/home',
-                            name: 'home',
-                            label: "首页",
-                            icon: 'house',
-                            url: 'Home'
-                        },
-                        {
-                            path: '/user',
-                            name: 'user',
-                            label: "用户管理",
-                            icon: 'user',
-                            url: 'User'
-                        }
-                        ],
-                    token: Mock.Random.guid(),
-                    message: "获取成功"
-                },
-            }
-        }
-        else{
-            return {
-                code:-999,
-                data:{
-                    message:"登陆错误"
-                }
-            }
-        }
     }
 }

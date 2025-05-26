@@ -1,119 +1,124 @@
 <script setup lang="js">
 import {reactive, ref, onMounted, getCurrentInstance, nextTick} from "vue";
+import CatTree from "@/components/CatTree.vue";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const {proxy} =getCurrentInstance()
 const dialogVisible =ref(false)
+const innerdialogVisible =ref(false)
 const action =ref('add')
 const selectedLevel=ref('')
 const formInline =reactive({
   keyWord:'',
 })
 const catForm=reactive({
-    catname:'',
-    cat_pid:'',
-    cat_level:1
+    catId:0,
+    catName:'',
+    catPid:0,
+    catLevel:1
 })
 const rules = reactive({
-  catname: [
+  catName: [
     { required: true, message: "分类名是必填项", trigger: "blur" }
   ],
 });
 const config=reactive({
-  catname:'',
+  catName:'',
   page: 1,
-  flatten : 'true' // 数据扁平化选项
 })
 const tableData = ref([])
-const categoryOptions=ref([])
 const tableLabels = reactive([
   {
-    prop: 'cat_id',
+    prop: 'catId',
     label: 'id',
     width: 200,
   },
   {
-    prop: 'catname',
+    prop: 'catName',
     label: '分类名称',
     width: 200,
   },
   {
-    prop: 'cat_pid',
+    prop: 'catPid',
     label: '父级id',
     width: 200,
   },
   {
-    prop: 'cat_level',
+    prop: 'catLevel',
     label: '分类层级',
     width: 200,
   },
 
 ])
+
+// 公共消息提示方法
+const showMessage = (type, message) => {
+  ElMessage({
+    showClose: false,
+    message,
+    type,
+    duration: 3000,
+    offset: 150,
+    center: true
+  });
+};
 const getCatelist= async ()=>{
   let res= await proxy.$api.getCateList(config)
+  // console.log(res.list)
   tableData.value = res.list.map(item=>{
     let  level;
-    if (item.cat_level===1){
+    if (item.catLevel===1){
       level="一级"
     }
-    else if (item.cat_level===2){
+    else if (item.catLevel===2){
       level="二级"
     }
-    else if (item.cat_level===3)level="三级"
+    else if (item.catLevel===3)level="三级"
     return {
-      ...
-          item,
-      cat_level: level
+      ...item,
+      catLevel: level
     }
   })
   config.total=res.count
 }
-
-
-
+const resetForm = () => {
+  if (proxy.$refs.Formcat) {
+    Pname.value=''
+    Object.assign(catForm,{
+      catId:'',
+      catName:'',
+      catPid:0,
+      catLevel:1
+    });
+    proxy.$refs.Formcat.resetFields(); // 重置表单
+  }
+}
 const handleSearch=(event)=>{
   if (event) {
     event.preventDefault(); // 阻止默认行为
   }
-  config.catname =formInline.keyWord
+  config.catName =formInline.keyWord
   getCatelist()
-}
-
-// 转换树形结构
-const convertToCascaderOptions =(cateList)=>{
-  const map = {};
-  const result = [];
-
-  // 将 cateList 中的每个节点转换为 Cascader 所需的格式
-  cateList.forEach(cat => {
-    const { cat_id, catname, cat_pid } = cat;
-    map[cat_id] = { value: cat_id, label: catname, children: [] };
-  });
-
-  // 重新构建树形结构
-  cateList.forEach(cat => {
-    const { cat_id, cat_pid } = cat;
-    if (cat_pid !== 0) {
-      map[cat_pid].children.push(map[cat_id]);
-    } else {
-      result.push(map[cat_id]);
-    }
-  });
-
-  return result;
 }
 
 
 
 const openAddDialog = () => {
-  categoryOptions.value=convertToCascaderOptions(tableData.value)
   Object.assign(catForm, { }); // 清空表单数据
   action.value = 'add'; // 设置为新增模式
   dialogVisible.value = true; // 打开弹窗
 };
 
-const openEditDialog=()=>{
+const openEditDialog=(row)=>{
   Object.assign(catForm, { }); // 清空表单数据
   action.value = 'edit'; // 设置为编辑模式
+  nextTick(()=>{
+    // 将当前行数据赋值给表单
+    Object.assign(catForm, {...row});
+    catForm.catPid=0
+    catForm.catLevel=1
+    console.log(catForm)
+  })
   dialogVisible.value = true; // 打开弹窗
 }
 
@@ -121,9 +126,7 @@ const openEditDialog=()=>{
 const handleClose = (done) => {
   dialogVisible.value = false
   // 重置表单数据
-  if (proxy.$refs.catForm) {
-    proxy.$refs.catForm.resetFields();
-  }
+  resetForm()
   // 重新获取用户列表数据
   getCatelist();
   // 关闭弹窗
@@ -133,23 +136,81 @@ const handleClose = (done) => {
 
 const handleCancel = () => {
   dialogVisible.value = false;
-  if (proxy.$refs.catForm) {
-    proxy.$refs.catForm.resetFields(); // 重置表单
+  resetForm()
+}
+
+const onSubmit=async ()=>{
+  if (catForm.catLevel==='一级'){
+    catForm.catLevel=1
   }
+  else if (catForm.catLevel==='二级'){
+    catForm.catLevel=2
+  }
+  else  catForm.catLevel=3
+  if (action.value==='add'){
+    catForm.catId=''
+      await proxy.$api.addCate(catForm).then(res=>{
+        if (res==='success !'||res==='success'){
+          showMessage("success",'添加成功')
+        }
+        else showMessage("error",'error:'+res)
+        getCatelist()
+      })
+  }
+  else if(action.value==='edit'){
+    console.log(2)
+    await proxy.$api.updCate(catForm).then(res=>{
+      if (res==='success !'||res==='success'){
+        showMessage("success",'更新成功')
+      }
+      else showMessage("error",'error:'+res)
+
+      getCatelist()
+    })
+  }
+
+  dialogVisible.value = true
+
+  resetForm()
 }
 
-const onSubmit=()=>{
-  catForm.cat_pid=catForm.cat_pid[catForm.cat_pid.length-1];
-  console.log(catForm)
-}
+const delcat=(row)=>{
+  ElMessageBox.confirm("是否删除?").then(async ()=>{
+    await proxy.$api.delCate(row).then(res=>{
+      if (res==='success !'){
+            showMessage("success",res)
+      }
+      else showMessage("error",'error:'+res)
+    })
 
-const delcat=()=>{
-
+    getCatelist()
+  })
 }
 
 const handlePageChange =(page)=>{
   config.page=page
   getCatelist()
+}
+
+
+const parent =ref({})
+const Pname=ref('')
+const setParent =(data)=>{
+  parent.value=data;
+}
+
+const SetParentVal=(data)=>{
+  innerdialogVisible.value=false
+  if (data){
+    catForm.catPid=data.catId;
+    catForm.catLevel=data.catLevel+1;
+    Pname.value=data.catName
+  }
+  else{
+    catForm.catLevel=1
+    catForm.catPid=0
+    Pname.value=''
+  }
 }
 
 onMounted(()=>{
@@ -172,7 +233,6 @@ onMounted(()=>{
     </el-form>
   </div>
   <el-card >
-    <el-header>商品分类</el-header>
     <el-table :data="tableData" border>
       <el-table-column
           v-for="item in tableLabels"
@@ -182,7 +242,7 @@ onMounted(()=>{
           :label="item.label"
 
       >
-        <template v-if="item.prop === 'cat_level'" #default="scope">
+        <template v-if="item.prop === 'catLevel'" #default="scope">
           <el-tag size="small"    :type="{
     '一级': 'primary',
     '二级': 'success',
@@ -223,29 +283,42 @@ onMounted(()=>{
       width="35%"
       :before-close="handleClose"
   >
-    <el-form :inline="true" :model="catForm" :rules="rules" >
+    <!-- 嵌套对话框 -->
+    <el-dialog
+        :title="'商品分类'"
+        width="35%"
+        v-model="innerdialogVisible"
+        append-to-body
+        class="inner-dialog"
+    >
+      <CatTree @config-sent="setParent"  />
+
+      <el-row style="justify-content: flex-end">
+        <el-form-item>
+          <el-button type="primary" @click="innerdialogVisible=false">取消</el-button>
+          <el-button type="primary" @click="SetParentVal(parent)">确定</el-button>
+        </el-form-item>
+      </el-row>
+    </el-dialog>
+
+
+
+    <el-form  ref="Formcat" :inline="true" :model="catForm" :rules="rules" >
       <el-row>
         <el-col :span="17">
-          <el-form-item label="分类名:" prop="catname">
-            <el-input v-model="catForm.catname" placeholder="请输入分类名" />
+          <el-form-item label="分类名:" prop="catName">
+            <el-input v-model="catForm.catName" placeholder="请输入分类名" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="16">
-          <el-form-item label="父级分类:" >
-            <el-cascader
-                :props="{
-                  checkStrictly:'true'
-                }"
-                :options="categoryOptions"
-                :placeholder="'请选择分类'"
-                v-model="catForm.cat_pid"
-                @change="handleCategoryChange"
-                clearable
-                :change-on-select="true"
-            />
+        <el-col :span="30">
+          <el-form-item label="父级分类(可选):" >
+            <el-text v-if="Pname"  size="large" type="success">{{ Pname }}</el-text>
+            <el-button  v-if="Pname" size="small" type="danger"  @click="SetParentVal" >取消</el-button>
+            <el-button   type="primary" @click="innerdialogVisible=true" size="small">父级分类</el-button>
           </el-form-item>
+
         </el-col>
       </el-row>
       <el-row style="justify-content: flex-end">

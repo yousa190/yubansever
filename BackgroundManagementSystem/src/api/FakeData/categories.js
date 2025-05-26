@@ -94,6 +94,21 @@ function paginate(list, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT) {
 }
 
 
+// 规格管理
+// 规格组数据模型
+let specGroups = Mock.mock({
+    'list|50-100': [{
+        'group_id|+1': 1,
+        'group_name': '@ctitle(2,4)规格',
+        'cat_id': () => Mock.Random.pick(cateList.map(c => c.cat_id)),
+        'show_type|1': 1, // 1-文字
+    }]
+}).list;
+
+
+
+
+
 
 export default {
     /**
@@ -173,7 +188,7 @@ export default {
      */
     addCategorie(config) {
         try {
-            const { catname, cat_pid, cat_level } = JSON.parse(config.body);
+            const { catname, cat_pid } = JSON.parse(config.body);
             cateList.unshift({
                 cat_id: catIdCounter++, // 使用同一计数器
                 catname,
@@ -224,4 +239,46 @@ export default {
             };
         }
     },
+
+
+    // 获取规格组列表
+    getSpecGroups(config) {
+        const {
+            group_id,
+            cat_id,
+            page = DEFAULT_PAGE,
+            limit = DEFAULT_LIMIT } = parseUrlParams(config.url);
+        const filtered=specGroups.filter(s => {
+            let match = true;
+
+            if (group_id) {
+                match = match && s.group_id.includes(group_id);
+            }
+
+
+            if (typeof cat_id !== 'undefined') {
+                match = match && (s.cat_id === Number(cat_id));
+            }
+            return match;
+        });
+
+        const paginatedList = paginate(filtered, page, limit);
+
+        return { code: 200,
+                data: {
+                list: paginatedList,
+                count: filtered.length,
+                totalPage: Math.ceil(filtered.length / limit),
+                currentPage: page
+            }, };
+    },
+    // 添加规格组
+    addSpecGroup(config) {
+        const newGroup = JSON.parse(config.body);
+        specGroups.unshift({
+            group_id: specGroups.length + 1,
+            ...newGroup
+        });
+        return { code: 200, msg: '添加成功' };
+    }
 };

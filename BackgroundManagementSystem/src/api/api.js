@@ -106,14 +106,79 @@ export default {
         return request({
             url:'/mall/catelist',
             method:"get",
-            mock: true,
+            mock: false,
             data:data
+        })
+    },
+    addCate(data){
+        return request({
+            url:'/mall/addcat',
+            method:"post",
+            mock:false,
+            data:data,
+        })
+    },
+    updCate(data){
+        return request({
+            url:'/mall/updcat',
+            method:"post",
+            mock:false,
+            data:data,
+        })
+    },
+    delCate(data){
+        return request({
+            url:'/mall/delcat',
+            method:"get",
+            mock:false,
+            data:data,
         })
     },
 
 
+    // mallConf
 
+    // getCatConf(data){
+    //     return request({
+    //         url:'/mall/getcatconf',
+    //         method:"get",
+    //         mock: true,
+    //         data:data
+    //     })
+    // },
 
+    getCatConf(data){
+        return request({
+            url:'/mallConf/list',
+            method:"get",
+            mock: false,
+            data:data
+        })
+    },
+    updateCatConf(data){
+        return request({
+            url:'/mallConf/edit',
+            method:"post",
+            mock:false,
+            data:data,
+        })
+    },
+    getOneConf(data){
+        return request({
+            url:'/mallConf/getone',
+            method:"get",
+            mock:false,
+            data:data,
+        })
+    },
+    delConf(data){
+        return request({
+            url:'/mallConf/delete',
+            method:"get",
+            mock:false,
+            data:data,
+        })
+    },
 
     // register and reset
     getEmailCode(data){

@@ -21,3 +21,6 @@ Mock.mock(/api\/good\/deletegood/,"get",Fakemall.deletegood)
 Mock.mock(/api\/good\/addgood/,"post",Fakemall.addgood)
 
 Mock.mock(/api\/mall\/catelist/,"get",FakeCate.getcateList)
+
+
+Mock.mock(/api\/mall\/getcatconf/,"get",FakeCate.getSpecGroups)

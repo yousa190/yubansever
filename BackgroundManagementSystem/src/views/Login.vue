@@ -11,17 +11,16 @@ const route = useRoute()
 
 // 登录按钮的逻辑处理
 const handleLogin = async () => {
+  // 后续实现登入验证
   const res= await proxy.$api.getMenu(loginForm)
-  if (res.menuList) {
+  if (res) {
     ElMessage.success({
       message: res.message,
     })
   }else ElMessage.error("登陆错误")
-  store.updateMenuList(res.menuList)
   store.state.token=res.token
   store.addMenu(router)
-  router.push('/home')
-
+  await router.push('/home')
 };
 const loginForm =reactive({
   name:'',

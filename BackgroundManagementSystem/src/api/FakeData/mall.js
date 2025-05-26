@@ -81,6 +81,8 @@ function generateGoodsData(count = 5, options = {}) {
 goodList=generateGoodsData(TOTAL_COUNT);
 
 
+
+
 export default {
     /**
      * 获取商品列表
@@ -197,4 +199,6 @@ export default {
             };
         }
     },
+
+
 }

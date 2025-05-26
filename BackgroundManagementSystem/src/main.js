@@ -9,7 +9,7 @@ import "@/assets/less/index.less"
 import "@/api/mock.js"
 import api from "@/api/api.js"
 import {useAllDataStore} from "@/stores/counter.js";
-
+import  i18n from '@/lang/vuei8n.js'
 
 // 创建 Vue 应用
 const app = createApp(App);
@@ -17,6 +17,10 @@ const app = createApp(App);
 // 注册 Pinia 到应用
 const pinia = createPinia();
 app.use(pinia);
+
+// 国际化
+app.use(i18n);
+
 
 // 使用 store
 const store = useAllDataStore();

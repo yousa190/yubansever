@@ -8,6 +8,7 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    CatTree: typeof import('./src/components/CatTree.vue')['default']
     CommonHeader: typeof import('./src/components/commonHeader.vue')['default']
     CommonLeftSide: typeof import('./src/components/commonLeftSide.vue')['default']
     CommonTag: typeof import('./src/components/CommonTag.vue')['default']
@@ -52,6 +53,7 @@ declare module 'vue' {
     ElTag: typeof import('element-plus/es')['ElTag']
     ElText: typeof import('element-plus/es')['ElText']
     ElTimePicker: typeof import('element-plus/es')['ElTimePicker']
+    ElTooltip: typeof import('element-plus/es')['ElTooltip']
     ElTree: typeof import('element-plus/es')['ElTree']
     ElUpload: typeof import('element-plus/es')['ElUpload']
     GoodImg: typeof import('./src/components/goodImg.vue')['default']
@@ -59,5 +61,8 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     WangEditor: typeof import('./src/components/WangEditor.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

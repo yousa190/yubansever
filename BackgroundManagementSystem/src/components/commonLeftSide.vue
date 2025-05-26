@@ -1,6 +1,6 @@
 <script setup  language="JavaScript" >
 import {useRoute, useRouter} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, ref,watch,reactive} from "vue";
 import {useAllDataStore} from "@/stores/counter.js";
 
 const store = useAllDataStore();
@@ -76,6 +76,7 @@ const handleMenu =(item)=>{
   router.push(item.path)
   store.selectMenu(item)
 }
+
 
 
 

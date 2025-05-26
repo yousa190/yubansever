@@ -13,38 +13,8 @@ const props = defineProps({
   }
 })
 const editorContent = ref('')
-
-// 监听父组件内容变化
-watch(() => props.Content, (newVal) => {
-    editorContent.value = newVal
-}, { immediate: true })
-
-
-// 编辑器实例（必须用 shallowRef）
-const editorRef = shallowRef()
-// 最大字数限制
-const maxLength = 500
-
 // 定义可触发的事件
 const emit = defineEmits(['comment-sent','reset-comment']);
-
-
-
-
-// 计算属性
-const currentCount = computed(() => {
-  return stripHtmlTags(editorContent.value).length
-})
-const isOverLimit = computed(() => {
-  return currentCount.value > maxLength
-})
-// 去除 HTML 标签的函数
-const stripHtmlTags = (html) => {
-  const tmp = document.createElement('div')
-  tmp.innerHTML = html
-  return tmp.textContent || tmp.innerText || ''
-}
-
 // 配置项
 const mode = 'default' // 或 'simple'
 const toolbarConfig = {
@@ -54,15 +24,32 @@ const toolbarConfig = {
     'insertTable',     // 隐藏表格
   ] , }
 const editorConfig = {
-  placeholder: '请输入商品介绍...',
+  placeholder: '请输入商品描述...',
   MENU_CONF: {},
 
 }
 
 
-// 模拟异步获取内容
-onMounted(() => {
-})
+// 编辑器实例（必须用 shallowRef）
+const editorRef = shallowRef(null)
+// 最大字数限制
+const maxLength = 5000
+
+// 计算属性
+const currentCount = computed(() => stripHtmlTags(editorContent.value).length)
+const isOverLimit = computed(() =>currentCount.value > maxLength)
+
+
+
+
+
+// 去除 HTML 标签的函数
+const stripHtmlTags = (html) => {
+  if (!html) return ''; // 增加判空处理
+  return html.replace(/<[^>]*>/g, '') || '';
+};
+
+
 
 // 销毁编辑器
 onBeforeUnmount(() => {
@@ -77,37 +64,53 @@ const handleCreated = (editor) => {
 }
 
 const handleChange=(editor)=>{
+  if (!editor) return; // 增加判空处理
+
   const content = editor.getHtml()
   const plainText = stripHtmlTags(content)
 
   // 超过限制时截断内容
-  if (plainText.length > maxLength) {
-    const truncatedText = plainText.slice(0, maxLength)
-    editor.dangerouslyInsertHtml(truncatedText)
-  }
 
-  editorContent.value = editor.getHtml()
-  emit('comment-sent', editorContent);
+
+  if(plainText.length<=maxLength) emit('comment-sent', editorContent);
 }
 
+// 监听父组件内容变化
+watch(() => props.Content, (newVal) => {
+  editorContent.value = newVal
+}, { immediate: true })
+
+// 模拟异步获取内容
+onMounted(() => {
+})
 
 </script>
 
 <template>
   <div  class="textA">
-    <!-- 字数统计 -->
-    <div class="word-counter">
+    <div class="product-header">
+      <div class="title-wrapper">
+        <h2 class="main-title">商品介绍</h2>
+
+        <el-tooltip content="请详细描述商品特性、使用场景等关键信息" placement="top">
+          <el-icon class="tip-icon">
+            <InfoFilled />
+          </el-icon>
+        </el-tooltip>
+      </div>
+      <!-- 字数统计 -->
+      <div class="word-counter">
+
       <span :class="{ 'limit-exceeded': isOverLimit }">
         {{ currentCount }}/{{ maxLength }}
       </span>
-      <el-alert
-          v-if="isOverLimit"
-          title="超出字数限制"
-          type="error"
-          :closable="false"
-          show-icon
-          class="limit-alert"
-      />
+        <el-text
+            v-if="isOverLimit"
+            type="danger"
+            class="limit-alert"
+        >超出字数限制</el-text>
+        <span class="sub-title">(建议500-1000字)</span>
+      </div>
     </div>
     <Toolbar
         style="border-bottom: 1px solid #ccc"
@@ -133,6 +136,53 @@ const handleChange=(editor)=>{
     max-width: 850px;
     width: 100%;
     max-height:400px ;
+
+    .product-header {
+        margin: 10px auto;
+        display: flex;
+      .title-wrapper {
+        margin-left: 20px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        .main-title {
+          margin: 0;
+          font-size: 16px;
+          color: #303133;
+        }
+
+        .tip-icon {
+          color: #909399;
+          cursor: help;
+        }
+      }
+
+      .sub-title {
+        font-size: 12px;
+        color: #909399;
+        display: block;
+        margin-top: 4px;
+      }
+    }
+
+    .word-counter {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2px;
+      font-size: 14px;
+      margin-left: 40px;
+
+      .limit-exceeded {
+        color: red;
+      }
+
+      .limit-alert {
+        color: red;
+        margin-left: 10px;
+      }
+    }
   }
 
 </style>

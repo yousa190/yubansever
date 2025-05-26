@@ -54,6 +54,7 @@ const tableLabels = reactive([
     prop: 'comment',
     label: '商品描述',
     width: 300,
+    showTooltip:true,
   },
 ])
 const goodData = ref([
@@ -125,7 +126,6 @@ const catinfo =ref({})
 
 const setConfig=(data)=>{
   catinfo.value=data
-
 }
 
 const setCatVal =()=>{
@@ -239,7 +239,7 @@ const  onSubmit= async ()=>{
     // 5. 统一错误处理
     console.error('表单提交异常:', error);
     ElMessage({
-      message: error.response?.data?.message || '请求失败，请检查网络',
+      message: error.response?.data?.message || '表单有误,请正确填写',
       type: 'error',
       duration: 5000,
       showClose: true
@@ -258,7 +258,7 @@ onMounted(()=>{
 </script>
 
 <template>
-<div class="good-header">
+  <div class="good-header">
   <el-button type="primary" @click="openAddDialog"  >添加商品</el-button>
   <el-form :inline="true" :model="formInline"   @submit.native.prevent >
     <el-form-item   >
@@ -272,53 +272,53 @@ onMounted(()=>{
     </el-form-item>
   </el-form>
 </div>
+  <div class="table">
+    <el-card>
+      <el-table :data="goodData"  type="" stripe border ref="table">
+        <el-table-column type="selection" width="55" />
+        <el-table-column v-for="item in tableLabels "
+                         :key="item.prop"
+                         :width="item.width ? item.width : '120px'"
+                         :prop="item.prop"
+                         :label="item.label"
+                         :show-overflow-tooltip="item.showTooltip" >
+          <template v-if="item.prop === 'image'"  #default="scope">
+            <img
+                :src="scope.row[item.prop]"
+                alt="商品图片"
+                class="goods-image"
+            />
+          </template>
 
-  <el-card>
-    <el-header>商品管理</el-header>
-    <el-table :data="goodData"  type="" stripe border ref="table">
-      <el-table-column type="selection" width="55" />
-      <el-table-column v-for="item in tableLabels "
-                       :key="item.prop"
-                       :width="item.width ? item.width : '120px'"
-                       :prop="item.prop"
-                       :label="item.label"
-                       show-overflow-tooltip >
-        <template v-if="item.prop === 'image'"  #default="scope">
-          <img
-              :src="scope.row[item.prop]"
-              alt="商品图片"
-             class="goods-image"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column fixed="right" label="操作" min-width="140" width="240">
-        <template #default="scope">
-          <el-button link type="primary" size="small" @click="openEditDialog(scope.row)" >
-            Edit
-          </el-button>
-          <el-button link type="danger" size="small" @click="delgood(scope.row)">
-            Delete
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" min-width="140" width="240">
+          <template #default="scope">
+            <el-button link type="primary" size="small" @click="openEditDialog(scope.row)" >
+              Edit
+            </el-button>
+            <el-button link type="danger" size="small" @click="delgood(scope.row)">
+              Delete
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-    <div class="pagination-wrapper">
-      <el-pagination
-          class="pager"
-          background
-          layout="prev, pager, next, jumper, total"
-          :page-size="config.pageSize"
-          :total="config.total"
-          prev-text="上一页"
-          next-text="下一页"
-          @current-change="handlePageChange"
-          :hide-on-single-page="true"
-      />
-    </div>
+      <div class="pagination-wrapper">
+        <el-pagination
+            class="pager"
+            background
+            layout="prev, pager, next, jumper, total"
+            :page-size="config.pageSize"
+            :total="config.total"
+            prev-text="上一页"
+            next-text="下一页"
+            @current-change="handlePageChange"
+            :hide-on-single-page="true"
+        />
+      </div>
 
-  </el-card>
-
+    </el-card>
+  </div>
   <el-dialog
       v-model="dialogVisible"
       :title="action === 'add' ? '新增商品' : '编辑商品'"
@@ -349,8 +349,8 @@ onMounted(()=>{
       <!-- 分类选择 -->
       <div class="category-section">
         <el-row>
-          <el-col :span="10">
-            <el-button type="primary" @click="innerdialogVisible=true">选择商品分类</el-button>
+          <el-col :span="14">
+            <el-button type="primary" @click="innerdialogVisible=true" size="default">选择商品分类</el-button>
           </el-col>
         </el-row>
         <el-row>
@@ -399,7 +399,7 @@ onMounted(()=>{
 
       <!-- 富文本编辑器 -->
       <el-row>
-        <el-form-item label="商品描述:"  prop="comment">
+        <el-form-item   prop="comment">
           <div class="editor-wrapper">
             <wang-editor  :Content="goodForm.comment"  @comment-sent="updatecomment" />
           </div>
@@ -426,6 +426,12 @@ onMounted(()=>{
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+
+.table {
+  position: relative;
+  height: 80%;
+  max-height: 900px;
 }
 
 /* 商品图片容器样式 */
@@ -530,8 +536,8 @@ onMounted(()=>{
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 
   :deep(.el-dialog__header) {
-    margin: 0;
-    padding: 20px 24px;
+    margin: 0 ;
+    padding: 12px 12px;
     background: #f8f9fa;
     border-bottom: 1px solid #e9ecef;
 
@@ -550,8 +556,7 @@ onMounted(()=>{
 // 表单容器
 .el-form {
   .el-row {
-    margin-bottom: 20px;
-
+    margin-bottom: 18px;
     &:last-child {
       margin-bottom: 0;
     }
@@ -640,7 +645,7 @@ onMounted(()=>{
 .upload-section {
   // 增加容器高度
   margin-left: 22px;
-  min-height: 180px; // 最小高度
+  min-height: 160px; // 最小高度
   padding: 25px 30px; // 上下增加内边距
   border: 2px dashed #c0c4cc; // 加粗虚线
   border-radius: 8px;

@@ -1,8 +1,8 @@
 const env =import.meta.env.MODE || "prod"
 const EnvConfig ={
     development:{
-        baseApi: "/api",
-        mockApi: "/mockapi",
+        baseApi: "http://localhost:8080",
+        mockApi: "/api",
     },
 
 }
