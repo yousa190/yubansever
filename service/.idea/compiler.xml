@@ -7,13 +7,18 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="yubanSever" />
+        <module name="back" />
+        <module name="web" />
+        <module name="yubanService" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="yubanSever" options="-parameters" />
+      <module name="back" options="-parameters" />
+      <module name="service" options="-parameters" />
+      <module name="web" options="-parameters" />
+      <module name="yubanService" options="-parameters" />
     </option>
   </component>
 </project>

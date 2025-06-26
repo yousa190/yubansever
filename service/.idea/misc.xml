@@ -5,9 +5,11 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/yubanSever/pom.xml" />
+        <option value="$PROJECT_DIR$/common/pom.xml" />
+        <option value="$PROJECT_DIR$/pom.xml" />
+        <option value="$PROJECT_DIR$/yubanService/pom.xml" />
       </list>
     </option>
-    <option name="workspaceImportForciblyTurnedOn" value="true" />
   </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="19" project-jdk-type="JavaSDK" />
 </project>
