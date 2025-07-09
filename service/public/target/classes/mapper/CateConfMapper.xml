@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuban.shop.mapper.CategoryConfigMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuban.shop.pojo.origin.SpecGroup.SpecGroup">
+        <id column="group_id" property="groupId" />
+        <result column="cat_id" property="catId" />
+        <result column="cat_name" property="catName" />
+        <result column="group_config" property="groupConfig"
+                jdbcType="VARCHAR"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+    </resultMap>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT group_id, cat_id, cat_name, group_config
+        FROM spec_group
+        <where>
+            <if test="catName != null and catName != ''">
+                AND cat_name LIKE CONCAT('%', #{catName}, '%')
+            </if>
+        </where>
+    </select>
+</mapper>

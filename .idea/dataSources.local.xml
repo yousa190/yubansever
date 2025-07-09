@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="dataSourceStorageLocal" created-in="IU-233.14015.106">
+  <component name="dataSourceStorageLocal" created-in="IU-233.15619.7">
     <data-source name="dms@localhost" uuid="3fed72ff-d3a0-49f4-881d-5b8c6ca0d2c4">
       <database-info product="MySQL" version="8.0.39" jdbc-version="4.2" driver-name="Amazon Web Services (AWS) JDBC Driver for MySQL" driver-version="aws-mysql-connector-java-1.1.14 (Revision: 4629bb4ea3ade12a811483453fafcb8fc2a66bb5)" dbms="MYSQL" exact-version="8.0.39" exact-driver-version="1.1">
         <extra-name-characters>#@</extra-name-characters>
