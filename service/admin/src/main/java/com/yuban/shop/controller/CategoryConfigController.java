@@ -3,7 +3,7 @@ package com.yuban.shop.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yuban.shop.pojo.origin.Result;
-import com.yuban.shop.pojo.origin.SpecGroup.SpecGroup;
+import com.yuban.shop.pojo.origin.categoryConfig.SpecGroup;
 import com.yuban.shop.service.CategoryConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +21,7 @@ public class CategoryConfigController {
     private CategoryConfigService categoryConfigService;
 
     @GetMapping("/list")
-    public Result getList(
-            @RequestParam(required = false,defaultValue = "") String catName,
+    public Result getList( @RequestParam(required = false,defaultValue = "") String catName,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
         Page<SpecGroup> pageData = categoryConfigService.getList( catName, page, limit);
@@ -72,13 +71,11 @@ public Result delete(@RequestParam Long groupId){
         }
     } catch (IllegalArgumentException e) {
         // 处理参数不合法的情况
-        return Result.error(e.getMessage());
+        return Result.error("IllegalArgumentException");
 
     } catch (Exception e) {
         // 记录异常信息
         log.error("An unexpected error occurred while deleting group with ID: {}", groupId, e);
-
-        // 返回更友好的错误信息
         return Result.error("发生未知错误，请联系管理员");
     }
 }

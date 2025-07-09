@@ -14,4 +14,7 @@ public interface CategoryMapper extends BaseMapper<Category> {
             @Param("cat_pid") Long cat_pid,
             @Param("catname") String catname,
             Page<Category> page);
+
+    // 根据 catname 查询 cat_id
+    Long selectCatIdByCatName(@Param("catname") String catname)
 }

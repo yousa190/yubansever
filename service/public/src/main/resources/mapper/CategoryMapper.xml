@@ -11,6 +11,14 @@
             <if test="catname != null and catname != ''">
                 AND cat_name LIKE CONCAT('%', #{catname}, '%')
             </if>
+                AND is_del = false
         </where>
     </select>
+
+    <!-- 根据 catname 查询 cat_id -->
+    <select id="selectCatIdByCatName" resultType="java.lang.Long">
+        SELECT cat_id FROM category
+        WHERE cat_name = #{catname} AND is_del = false
+    </select>
+
 </mapper>

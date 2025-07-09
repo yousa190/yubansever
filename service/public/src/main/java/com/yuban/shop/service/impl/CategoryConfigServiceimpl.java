@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.yuban.shop.exception.SystemException;
 import com.yuban.shop.mapper.CategoryConfigMapper;
-import com.yuban.shop.pojo.origin.SpecGroup.SpecGroup;
+import com.yuban.shop.pojo.enums.HttpCodeEnum;
+import com.yuban.shop.pojo.origin.categoryConfig.SpecGroup;
 import com.yuban.shop.service.CategoryConfigService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
 //    处理JSON
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
+
+
     @Autowired
     private CategoryConfigMapper categoryConfigMapper;
 
@@ -28,7 +32,7 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
     @Transactional(readOnly = true) // 只读事务优化
     public SpecGroup getByCatId(Long catId) {
         if (catId == null) {
-            throw new IllegalArgumentException("分类ID不能为空");
+            throw new SystemException(HttpCodeEnum.CATID_NOT_NULL);
         }
 
         LambdaQueryWrapper<SpecGroup> queryWrapper = new LambdaQueryWrapper<>();
@@ -39,8 +43,10 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
     @Override
     public Page<SpecGroup> getList(String catName, int page, int limit) {
         Page<SpecGroup> pageParam = new Page<>(page, limit);
-        Page<SpecGroup> result = categoryConfigMapper.selectByCondition(catName, pageParam);
+        if (catName != null) {
 
+        }
+        Page<SpecGroup> result = categoryConfigMapper.selectByCondition(catName, pageParam);
         return result;
     }
 
@@ -53,7 +59,7 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
         try {
             // 参数校验
             if (specGroup.getCatId() == null) {
-                throw new IllegalArgumentException("分类ID不能为空");
+                throw new SystemException(HttpCodeEnum.CATID_NOT_NULL);
             }
 
             // 查询现有配置
@@ -70,7 +76,7 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
             return categoryConfigMapper.insert(specGroup) > 0;
 
         } catch (DataAccessException e) {
-            throw new IllegalArgumentException("数据库操作失败",e);
+            throw new SystemException(HttpCodeEnum.DB_TIMEOUT);
         }
     }
 
@@ -80,7 +86,7 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
     public boolean delete(Long groupId) {
         if (groupId == null) {
             log.warn("删除操作接收到空ID");
-            throw new IllegalArgumentException("参数ID不能为空");
+            throw new SystemException(HttpCodeEnum.GROUPID_NOT_NULL);
         }
 
         try {
@@ -93,7 +99,7 @@ public class CategoryConfigServiceimpl implements CategoryConfigService {
             return affectedRows > 0;
         } catch (DataAccessException e) {
             log.error("数据库异常，删除失败，ID：{}", groupId, e);
-            throw new RuntimeException("删除操作失败，请检查数据状态");
+            throw new SystemException(HttpCodeEnum.DB_TIMEOUT);
         }
     }
 }

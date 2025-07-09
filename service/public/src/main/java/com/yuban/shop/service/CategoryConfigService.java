@@ -2,7 +2,7 @@ package com.yuban.shop.service;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.yuban.shop.pojo.origin.SpecGroup.SpecGroup;
+import com.yuban.shop.pojo.origin.categoryConfig.SpecGroup;
 import org.springframework.transaction.annotation.Transactional;
 
 

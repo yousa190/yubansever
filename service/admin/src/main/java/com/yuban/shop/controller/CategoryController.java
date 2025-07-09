@@ -23,33 +23,28 @@ public class CategoryController {
             @RequestParam(required = false) Long catPid,
             @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int limit) {
+        Map<String, Object> response = categoryService.getCategories(catPid, catName, page, limit);
 
-        Page<Category> pageData = categoryService.getCategories(catPid, catName, page, limit);
-        Map<String, Object> response = new HashMap<>();
-        response.put("list", pageData.getRecords());
-        response.put("count", pageData.getTotal());
-        response.put("totalPage", pageData.getPages());
-        response.put("currentPage", page);
         return Result.success(response);
     }
 
     @GetMapping("/delcat")
     public Result deleteCategory(@RequestParam Long catId) {
         categoryService.deleteCategory(catId);
-        return Result.success("success !");
+        return Result.success("success!");
     }
 
     @PostMapping("/addcat")
     public Result addCategory( @RequestBody  Category category) {
         log.info(category.toString());
         Category saved = categoryService.addCategory(category);
-        return Result.success("success !");
+        return Result.success("success!");
     }
 
     @PostMapping("/updcat")
     public Result updCategory( @RequestBody   Category category) {
         log.info(category.toString());
         categoryService.updateCategory(category);
-        return Result.success("success !");
+        return Result.success("success!");
     }
 }

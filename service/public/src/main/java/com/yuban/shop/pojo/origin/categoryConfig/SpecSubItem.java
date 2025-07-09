@@ -1,4 +1,4 @@
-package com.yuban.shop.pojo.origin.SpecGroup;
+package com.yuban.shop.pojo.origin.categoryConfig;
 
 import lombok.*;
 

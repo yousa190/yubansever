@@ -1,7 +1,9 @@
 package com.yuban.shop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.yuban.shop.exception.SystemException;
 import com.yuban.shop.mapper.Usermapper;
+import com.yuban.shop.pojo.enums.HttpCodeEnum;
 import com.yuban.shop.utils.PasswordUtil;
 import com.yuban.shop.pojo.origin.Result;
 import com.yuban.shop.pojo.origin.UserData;
@@ -42,9 +44,13 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public Result regist(UserData userData) {
-        if (!mailcheck(userData.getEmail()))return Result.error("邮箱已经被使用!!!");
-        else if (!namecheck(userData.getUsername()))return Result.error("名称重复!!!");
-//        密码加密
+        if (!mailcheck(userData.getEmail())){
+            throw new SystemException(HttpCodeEnum.EMAIL_ALREADY_USED);
+        }
+        else if (!namecheck(userData.getUsername())){
+            throw new SystemException(HttpCodeEnum.NAME_DUPLICATE);
+        };
+        // 密码加密
         userData.setPasswordHash(PasswordUtil.hashPassword(userData.getPasswordHash()));
 
 

@@ -2,13 +2,19 @@ package com.yuban.shop.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.yuban.shop.exception.SystemException;
 import com.yuban.shop.mapper.CategoryMapper;
+import com.yuban.shop.pojo.enums.HttpCodeEnum;
 import com.yuban.shop.pojo.origin.Category;
+import com.yuban.shop.pojo.vo.CategoryVo;
 import com.yuban.shop.service.CategoryService;
+import com.yuban.shop.utils.BeanCopyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Service
@@ -17,23 +23,32 @@ public class CategoryServiceimpl implements CategoryService {
     @Autowired
     private CategoryMapper categoryMapper;
 
-    public Page<Category> getCategories(Long catPid, String catName, int page, int limit) {
+    public Map<String, Object> getCategories(Long catPid, String catName, int page, int limit) {
         Page<Category> pageParam = new Page<>(page, limit);
-        return categoryMapper.selectByCondition(catPid, catName, pageParam);
+        Page<Category> pageData = categoryMapper.selectByCondition(catPid, catName, pageParam);
+        Map<String, Object> response = new HashMap<>();
+        List<CategoryVo> res = BeanCopyUtils.copyBeanList(pageData.getRecords(), CategoryVo.class);
+        response.put("list",res );
+        response.put("count", pageData.getTotal());
+        response.put("totalPage", pageData.getPages());
+        response.put("currentPage", page);
+        return response;
     }
 
     public void deleteCategory(Long catId) {
         // 1. 检查分类是否存在
         Category category = categoryMapper.selectById(catId);
+
         if (category == null) {
-            throw new RuntimeException("分类不存在");
+            throw new SystemException(HttpCodeEnum.CATEGORY_NOT_EXIST);
         }
 
         // 2. 递归删除所有子分类
         deleteChildrenRecursively(catId);
 
         // 3. 删除当前分类
-        categoryMapper.deleteById(catId);
+        category.setIsDel(true);
+        categoryMapper.updateById(category);
 
         // 4. 删除关联的规格组
 //        QueryWrapper<SpecGroup> groupWrapper = new QueryWrapper<>();
@@ -54,18 +69,21 @@ public class CategoryServiceimpl implements CategoryService {
             // 递归删除子分类的子分类
             deleteChildrenRecursively(child.getCatId());
             // 删除当前子分类
-            categoryMapper.deleteById(child.getCatId());
+            child.setIsDel(true);
+            categoryMapper.updateById(child);
         }
     }
+
     @Override
     public Category addCategory(Category category) {
-        // 层级计算逻辑同之前
+
         if (category.getCatPid() == 0) {
             category.setCatLevel(1);
         } else {
             Category parent = categoryMapper.selectById(category.getCatPid());
             category.setCatLevel(parent.getCatLevel() + 1);
         }
+        category.setIsDel(false);
         categoryMapper.insert(category);
         return category;
     }
@@ -75,26 +93,27 @@ public class CategoryServiceimpl implements CategoryService {
         // 1. 检查分类是否存在
         Category existingCategory = categoryMapper.selectById(categoryDTO.getCatId());
         if (existingCategory == null) {
-            throw new RuntimeException("分类不存在");
+            throw new SystemException(HttpCodeEnum.CATEGORY_NOT_EXIST);
         }
 
         // 2. 检查名称是否重复（同一父分类下不能重复）
         QueryWrapper<Category> nameCheckWrapper = new QueryWrapper<>();
         nameCheckWrapper.eq("cat_pid", categoryDTO.getCatPid())
-                .eq("cat_name", categoryDTO.getCatName())
-                .ne("cat_id", categoryDTO.getCatId()); // 排除自身
+                        .eq("cat_name", categoryDTO.getCatName())
+                        .ne("cat_id", categoryDTO.getCatId()) // 排除自身
+                        .eq("is_del", false); // 排除已删除的分类
         if (categoryMapper.selectCount(nameCheckWrapper) > 0) {
-            throw new RuntimeException("同一父分类下名称不能重复");
+            throw new SystemException(HttpCodeEnum.SAME_PARENT_CATEGORY_DUPLICATE_NAME);
         }
 
         // 3. 检查新父分类是否有效
-        if (categoryDTO.getCatPid()!=0&&!categoryDTO.getCatPid().equals(existingCategory.getCatPid())) {
+        if (categoryDTO.getCatPid()!=0 && !categoryDTO.getCatPid().equals(existingCategory.getCatPid())) {
             Category newParent = categoryMapper.selectById(categoryDTO.getCatPid());
             if (newParent == null) {
-                throw new RuntimeException("父分类不存在");
+                throw new SystemException(HttpCodeEnum.PARENT_CATEGORY_NOT_EXIST);
             }
             if (newParent.getCatLevel() >= 3) { // 假设最大层级为3
-                throw new RuntimeException("父分类层级已达上限");
+                throw new SystemException(HttpCodeEnum.PARENT_CATEGORY_LEVEL_EXCEED);
             }
         }
 
@@ -103,6 +122,7 @@ public class CategoryServiceimpl implements CategoryService {
         updatedCategory.setCatId(categoryDTO.getCatId());
         updatedCategory.setCatName(categoryDTO.getCatName());
         updatedCategory.setCatPid(categoryDTO.getCatPid());
+        updatedCategory.setIsDel(existingCategory.getIsDel());
         updatedCategory.setCatLevel(calculateNewLevel(categoryDTO.getCatPid()));
         categoryMapper.updateById(updatedCategory);
 

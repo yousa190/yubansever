@@ -1,25 +1,25 @@
 import axios from 'axios';
-
-import {ElMessage} from 'element-plus'
+import { ElMessage } from 'element-plus';
 import config from "@/config";
 
 // 创建 Axios 实例
 const service = axios.create({
     baseURL: config.baseApi
-})
-// Add a request interceptor
+});
+
+// 请求拦截器
 service.interceptors.request.use(function (config) {
-    // Do something before request is sent
+    // 在请求发送之前做些什么
     return config;
 }, function (error) {
-    // Do something with request error
+    // 处理请求错误
     return Promise.reject(error);
 });
 
 // 常量定义
 const NETWORK_ERROR = 'Network Error'; // 统一的网络错误提示
-const SUCCESS_CODE = 200; // 成功的业务状态码
-const DATAERR_CODE = 400; // 成功的业务状态码
+const SUCCESS_CODE = '00000'; // 假设后端成功码为 00000，根据实际情况修改
+const DATAERR_CODE = '40000'; // 假设后端数据错误码为 40000，根据实际情况修改
 
 // 响应拦截器
 service.interceptors.response.use(
@@ -35,11 +35,10 @@ service.interceptors.response.use(
         // 检查业务状态码
         if (code === SUCCESS_CODE) {
             return data;  // 返回实际数据
-        }
-        else if (code === DATAERR_CODE) {
-            return message;
-        }
-        else {
+        } else if (code === DATAERR_CODE) {
+            ElMessage.error(message);
+            return Promise.reject(message);
+        } else {
             // 弹出错误提示
             const errorMsg = message || NETWORK_ERROR;
             ElMessage.error(errorMsg);
@@ -54,22 +53,21 @@ service.interceptors.response.use(
     }
 );
 
-
-function request(options){
-    console.log(options)
-    options.method=options.method||"get";
-    if(options.method.toLowerCase()==="get"){
-        options.params=options.data;
+function request(options) {
+    console.log(options);
+    options.method = options.method || "get";
+    if (options.method.toLowerCase() === "get") {
+        options.params = options.data;
     }
-    // 处理mock
 
-    let isMock = config.mock
-    if(typeof options.mock !== "undefined"){}
-     isMock = options.mock
+    // 处理 mock
+    let isMock = config.mock;
+    if (typeof options.mock !== "undefined") {
+        isMock = options.mock;
+    }
 
     // 处理环境
-    service.defaults.baseURL= isMock ? config.mockApi : config.baseApi;
-
+    service.defaults.baseURL = isMock ? config.mockApi : config.baseApi;
 
     return service(options);
 }

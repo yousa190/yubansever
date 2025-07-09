@@ -47,6 +47,7 @@ public class UserController {
         if (!cachedCode.equals(code)) {
             return Result.error("验证码不正确");
         }
+
         // 验证通过后删除存储的验证码（防止重复使用）
         redisTemplate.deleteObject(redisKey);
 

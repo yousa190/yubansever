@@ -28,6 +28,9 @@ public class Category {
     private Long catPid = 0L;
     @TableField("cat_level")
     private Integer catLevel;
+    @TableField("is_del")
+    private Boolean isDel;
+
 
 
 }

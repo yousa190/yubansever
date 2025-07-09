@@ -11,6 +11,7 @@
             <if test="catname != null and catname != ''">
                 AND cat_name LIKE CONCAT('%', #{catname}, '%')
             </if>
+                AND is_del = false
         </where>
     </select>
 </mapper>

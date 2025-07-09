@@ -1,13 +1,14 @@
 package com.yuban.shop.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.yuban.shop.pojo.origin.Category;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Map;
 
 
 @Transactional
 public interface CategoryService {
-    public Page<Category> getCategories(Long catPid, String catName, int page, int limit);
+    public Map<String, Object> getCategories(Long catPid, String catName, int page, int limit);
 
     public void deleteCategory(Long catId);
 
