@@ -1,0 +1,236 @@
+/*! 全局样式配置  */
+
+/* ==============================================
+   1. 基础重置与全局设置
+   ============================================== */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box; /* 全局盒模型统一为border-box，简化尺寸计算 */
+}
+
+/* HTML5 元素默认块级化（覆盖旧浏览器默认） */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section, main {
+  display: block;
+}
+
+/* 文档基础样式 */
+html {
+  line-height: 1.15; /* 修正行高 */
+  -webkit-text-size-adjust: 100%; /* 防止iOS旋转后字体缩放 */
+  scroll-behavior: smooth; /* 平滑滚动 */
+}
+
+body {
+  min-height: 100vh; /* 确保body至少占满视口高度 */
+  background-color: #f7f7f7;
+  font-family: -apple-system, BlinkMacSystemFont, 'Microsoft YaHei',
+  'Heiti SC', Arial, sans-serif; /* 优化字体栈，增强跨平台兼容性 */
+  font-size: 15px;
+  color: #333; /* 默认文本颜色，提升可读性 */
+}
+
+html, body {
+  width: 100%;
+  height: 100%; /* 关键：让 html 和 body 高度为屏幕高度 */
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ==============================================
+   2. 通用元素样式
+   ============================================== */
+
+/* 文本级元素重置 */
+a {
+  background-color: transparent;
+  text-decoration: none;
+  color: inherit; /* 继承父级文本颜色，增强灵活性 */
+}
+
+abbr[title] {
+  border-bottom: none;
+  text-decoration: underline dotted; /* 点状下划线更符合语义 */
+}
+
+b, strong {
+  font-weight: bolder;
+}
+
+code, kbd, samp, pre {
+  font-family: monospace, monospace;
+  font-size: 1em;
+  background-color: #f0f0f0; /* 代码块背景色，增强区分度 */
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+}
+
+pre {
+  padding: 1em;
+  overflow-x: auto; /* 长代码横向滚动 */
+}
+
+small {
+  font-size: 80%;
+}
+
+sub, sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub { bottom: -0.25em; }
+sup { top: -0.5em; }
+
+
+/* 媒体元素 */
+img, video {
+  display: block;
+  max-width: 100%; /* 防止溢出容器，适配响应式 */
+  height: auto; /* 保持宽高比 */
+  border-style: none;
+}
+
+/* 列表元素 */
+ul, ol, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+
+/* ==============================================
+   3. 表单元素样式
+   ============================================== */
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+  padding: 0.375em 0.75em; /* 统一内边距 */
+  border: 1px solid #ddd; /* 默认边框 */
+  border-radius: 4px; /* 统一圆角 */
+  box-sizing: border-box;
+}
+
+
+
+
+/* 修正特定元素样式 */
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+  border: 1px solid #ddd;
+}
+
+legend {
+  box-sizing: border-box;
+  color: inherit;
+  display: table;
+  max-width: 100%;
+  padding: 0 0.5em; /* 增加左右内边距 */
+  white-space: normal;
+}
+
+textarea {
+  overflow: auto;
+  min-height: 80px; /* 文本域最小高度 */
+  resize: vertical; /* 仅允许垂直拉伸 */
+}
+
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box;
+  padding: 0;
+  margin-right: 0.5em; /* 与文字间距 */
+}
+
+
+/* ==============================================
+   4. 工具类样式（复用性样式）
+   ============================================== */
+/* 容器类 */
+.w {
+  width: 100%;
+  max-width: 1600px; /* 最大宽度限制 */
+  margin: 0 auto;
+  padding: 0 1rem; /* 左右内边距，适配小屏幕 */
+}
+
+/* 文本截断 */
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* 多行文本截断（默认3行） */
+.multiline-ellipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-all;
+}
+
+/* 清除浮动 */
+.clearfix::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/* 隐藏元素（保留语义） */
+.hidden-visually {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* 对齐方式 */
+.text-left { text-align: left; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+
+
+
+
+
+/* ==============================================
+   5. 交互与状态样式
+   ============================================== */
+/* 链接交互 */
+a {
+  transition: color 0.5s, background-color 0.2s;
+}
+
+a:hover {
+  color: #007bff; /* 链接hover颜色 */
+
+}
+
+/* 禁用状态 */
+[disabled] {
+  cursor: not-allowed;
+  opacity: 0.7;
+  pointer-events: none; /* 禁止交互 */
+}
+
+/* 隐藏属性 */
+[hidden] {
+  display: none !important;
+}

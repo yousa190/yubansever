@@ -1,0 +1,12 @@
+com\yuban\mapper\CategoryMapper.class
+com\yuban\service\CategoryService.class
+com\yuban\service\impl\CategoryServiceimpl.class
+com\yuban\entity\origin\PageConf.class
+com\yuban\entity\origin\SpecGroup\SpecItem.class
+com\yuban\entity\origin\SpecGroup\SpecGroup.class
+com\yuban\entity\origin\Category.class
+com\yuban\service\impl\CateConfServiceimpl.class
+com\yuban\service\CateConfService.class
+com\yuban\filter\filter.class
+com\yuban\entity\origin\SpecGroup\SpecSubItem.class
+com\yuban\mapper\CateConfMapper.class
