@@ -50,7 +50,7 @@ store.addMenu(router, "refresh");
 
 // 注册插件
 app.use(router);
-app.use(ElementPlus); // 确保 ElementPlus 正确注册
+app.use(ElementPlus);
 
 // 注册 Element Plus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

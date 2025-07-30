@@ -1,6 +1,6 @@
 <script setup lang="js">
 import { reactive, ref, onUnmounted } from 'vue'
-import { useAllDataStore } from '@/stores/counter.js'
+import { useAllDataStore } from '@/stores/userinfo.js'
 import { useRouter } from 'vue-router'
 import { User, ArrowDown,Setting, Star, ShoppingCart } from '@element-plus/icons-vue'
 
@@ -158,8 +158,9 @@ onUnmounted(cleanup)
       position: relative;
 
       a {
+        font-size: 16px;
         padding: 0 6px;
-        color: #ccc;
+        color: #7a7979;
         border-left: 1px solid #ccc;
         text-decoration: none;
 

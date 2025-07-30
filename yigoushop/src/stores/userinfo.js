@@ -10,7 +10,7 @@ const initState=()=>{
   }
 }
 
-export const useAllDataStore =defineStore('allData',()=>{
+export const useAllDataStore =defineStore('userinfo',()=>{
   const state = ref(initState())
 
   function updateUser(user) {

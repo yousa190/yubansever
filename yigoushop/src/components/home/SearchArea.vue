@@ -107,10 +107,9 @@ const handleKeydown = (e) => {
 @hover-color: #f9f9f9;
 
 .topSearchArea {
-  background-color: #fff;
+  background-color: inherit;
 
-  padding: 15px 0;
-  padding-bottom: 0;
+  padding: 15px 0 0;
 
   .container {
     width: 100%;
