@@ -1,5 +1,14 @@
 <script setup >
 import { ArrowUp, Service,ShoppingCart } from '@element-plus/icons-vue'
+
+const scrollToTop = () => {
+  // 平滑滚动到顶部
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth'
+  })
+}
+
 </script>
 <template>
   <div class="parentBox">
@@ -12,7 +21,7 @@ import { ArrowUp, Service,ShoppingCart } from '@element-plus/icons-vue'
         <span><el-icon><Service /></el-icon></span>
         <span>联系客服</span>
       </div>
-      <div>
+      <div @click="scrollToTop">
         <span><el-icon><ArrowUp /></el-icon></span>
         <span>回到顶部</span>
       </div>

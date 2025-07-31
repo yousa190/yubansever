@@ -1,6 +1,7 @@
 <script setup >
 import { getCurrentInstance, onMounted, ref ,reactive } from 'vue'
 import { useRouter } from 'vue-router'
+import { StarFilled } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const { proxy } = getCurrentInstance()
@@ -29,7 +30,7 @@ onMounted(() => {
   <ul class="header-nav">
     <li><router-link to="/home">首页</router-link></li>
     <li class="has-layer"   v-for=" item in topCategoryList" :key="item.id" >
-      <a href="#" class="parent-link">{{item.name}}</a>
+      <router-link :to="'/category/'+item.id" class="parent-link" >{{item.name}}</router-link>
       <div class="layer">
         <ul class="layer-list">
           <li v-for="subitem in item.catedatalist " :key="subitem.id">
@@ -50,6 +51,7 @@ onMounted(() => {
 <!--    <li><a href="#">运动旅行</a></li>-->
 <!--    <li><a href="#">数码家电</a></li>-->
   </ul>
+
 </template>
 
 <style lang="less">
@@ -70,7 +72,6 @@ onMounted(() => {
 
     a {
       display: inline-block;
-      padding-bottom: 8px;
       text-decoration: none;
       color: inherit;
     }

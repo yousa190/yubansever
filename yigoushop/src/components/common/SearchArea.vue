@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { Search, ShoppingCart, StarFilled, User } from '@element-plus/icons-vue'
-import '@/components/home/SearchNav.vue'
+import '@/components/common/SearchNav.vue'
 
 const router = useRouter()
 const searchQuery = ref('')
@@ -92,8 +92,8 @@ const handleKeydown = (e) => {
     <div class="container search-nav">
       <search-nav/>
     </div>
-
   </div>
+
 </template>
 
 <style scoped lang="less">

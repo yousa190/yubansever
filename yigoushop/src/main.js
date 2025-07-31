@@ -5,7 +5,7 @@ import { createPinia } from 'pinia'
 
 import "@/api/mock.js"
 import api from '@/api/api.js'
-
+import slots from '@/components/slots'
 import App from '@/App.vue'
 import router from '@/router'
 
@@ -14,7 +14,7 @@ const app = createApp(App)
 const pinia = createPinia();
 app.use(pinia)
 app.use(router)
-
+app.use(slots)
 
 // 全局属性
 app.config.globalProperties.$api = api;

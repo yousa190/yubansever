@@ -3,7 +3,6 @@
 </script>
 
 <template>
-
   <router-view/>
 </template>
 
@@ -13,6 +12,6 @@
 #app{
   width: 100% ;
   height: inherit;
-  overflow: hidden;
+  overflow: auto;
 }
 </style>

@@ -8,8 +8,8 @@ import 'swiper/css/pagination' // 轮播图底面的小圆点
 import 'swiper/css/navigation' // 轮播图两边的左右箭头
 import 'swiper/css/scrollbar'  // 轮播图的滚动条
 
-import { Autoplay, Pagination, Navigation, Scrollbar, EffectFade } from 'swiper/modules'
-const modules = [Autoplay, Pagination, Navigation, Scrollbar, EffectFade]
+import { Autoplay, Pagination, Navigation, Scrollbar, EffectFade,Mousewheel } from 'swiper/modules'
+const modules = [Autoplay, Pagination, Navigation, Scrollbar, EffectFade,Mousewheel]
 
 const dataList = reactive([
   {
@@ -76,7 +76,7 @@ onMounted(() => {
 // 轮播图基础样式
 .home-swiper {
   width: 100%;
-  height: 320px;
+  height: 500px;
   border-radius: 2px;  // 增加圆角美化
   overflow: hidden;    // 裁剪超出部分
   transition: opacity 0.5s ease;
