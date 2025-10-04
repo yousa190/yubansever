@@ -3,7 +3,8 @@
 </script>
 
 <template>
-  <router-view/>
+
+    <router-view/>
 </template>
 
 <style lang="less">
@@ -14,4 +15,5 @@
   height: inherit;
   overflow: auto;
 }
+
 </style>

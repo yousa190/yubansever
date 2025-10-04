@@ -3,6 +3,9 @@ package com.yuban.shop.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,13 +20,19 @@ import java.nio.file.Paths;
 @Slf4j
 @RestController
 @RequestMapping("")
+@Tag(name = "文件下载接口", description = "图片文件下载等相关接口")
 public class DownloadController {
 
     @Value("${upload.path}") // 从配置文件中读取上传路径
     private String downloadPath;
 
+    @Operation(summary = "下载图片文件", description = "根据类型和文件名下载对应的图片文件")
     @RequestMapping("/images/{type}/{filename}")
-    public void downloadimg(@PathVariable String type,@PathVariable String filename, HttpServletRequest request,HttpServletResponse response){
+    public void downloadimg(
+            @Parameter(description = "图片类型：users(用户头像) 或 goods(商品图片)", required = true) @PathVariable String type,
+            @Parameter(description = "文件名", required = true) @PathVariable String filename, 
+            HttpServletRequest request,
+            HttpServletResponse response){
         // 获取文件路径
         Path filePath = Paths.get(downloadPath, "images", type, filename);
         File file = filePath.toFile();

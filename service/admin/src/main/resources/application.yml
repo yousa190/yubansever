@@ -1,10 +1,18 @@
 spring:
 
+#  datasource:
+#    driver-class-name: org.postgresql.Driver
+#    url: jdbc:postgresql://localhost:5432/dms
+#    username: ${DB_USERNAME:ming}
+#    password: ${DB_PASSWORD:530227177}
+
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/dms
-    username: ${DB_USERNAME:ming}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dms?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC&useSSL=false
+    username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:530227177}
+
+
 
   servlet:
     multipart:
@@ -51,11 +59,27 @@ mybatis-plus:
 
 logging:
   level:
-    org.springframework.beans.factory.support: DEBUG
-    org.springframework.context.annotation: TRACE
+    com:
+      yuban:
+        shop:
+          service: info
+          mapper: debug
+          controller: info
     com.baomidou: DEBUG
     org.mybatis: DEBUG
 
 #上传路径
 upload:
   path: ${user.dir}\yubanSever\datas
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+  show-actuator: true

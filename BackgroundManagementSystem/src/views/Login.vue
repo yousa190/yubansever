@@ -13,6 +13,7 @@ const route = useRoute()
 const handleLogin = async () => {
   // 后续实现登入验证
   const res= await proxy.$api.getMenu(loginForm)
+  console.log(res)
   if (res) {
     ElMessage.success({
       message: res.message,

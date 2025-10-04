@@ -1,7 +1,7 @@
 package com.yuban.shop.exception.exceptionHandler;
 
 import com.yuban.shop.exception.SystemException;
-import com.yuban.shop.pojo.origin.Result;
+import com.yuban.shop.pojo.entity.Result;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;

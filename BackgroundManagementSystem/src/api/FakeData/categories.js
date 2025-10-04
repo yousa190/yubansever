@@ -147,7 +147,7 @@ export default {
         const paginatedList = paginate(filteredList, page, limit);
 
         return {
-            code: 200,
+            code: '00000',
             data: {
                 list: paginatedList,
                 count: filteredList.length,
@@ -175,7 +175,7 @@ export default {
         }
         cateList = cateList.filter(category => category.cat_id !== cat_id);
         return {
-            code: 200,
+            code: '00000',
             msg: '删除成功',
         };
     },
@@ -196,9 +196,9 @@ export default {
                 cat_level: Number(cat_level),
             });
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '添加成功',
                 },
             };
@@ -226,9 +226,9 @@ export default {
                 category.cat_level = cat_level;
             }
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '编辑成功',
                 },
             };
@@ -264,7 +264,7 @@ export default {
 
         const paginatedList = paginate(filtered, page, limit);
 
-        return { code: 200,
+        return { code: '00000',
                 data: {
                 list: paginatedList,
                 count: filtered.length,
@@ -279,6 +279,6 @@ export default {
             group_id: specGroups.length + 1,
             ...newGroup
         });
-        return { code: 200, msg: '添加成功' };
+        return { code: '00000', msg: '添加成功' };
     }
 };

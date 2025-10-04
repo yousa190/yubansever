@@ -8,3 +8,87 @@
 
 20250219
 完成了用户注册接口的后端实现
+
+20250120 - 用户模块设计完成
+完成了用户模块的整体架构设计
+创建了详细的用户模块设计文档，包含：
+- 用户认证模块设计（注册、登录、密码管理、会话管理）
+- 用户信息管理模块设计（个人信息、头像管理、联系方式）
+- 用户权限管理模块设计（角色管理、权限控制、菜单权限）
+- 用户行为模块设计（登录记录、操作日志、安全监控）
+- 数据库表结构设计
+- 接口设计规范
+- 安全设计方案
+- 前端功能设计
+- 开发计划和优先级
+- 测试策略
+- 部署运维方案
+
+当前用户模块实现状态：
+✅ 已实现功能：
+- 用户注册（邮箱验证、重复性检查、密码加密）
+- 用户信息管理（后台管理端）
+- 基础数据库表结构
+- 邮箱验证码发送
+- 用户名/邮箱重复检查
+
+⚠️ 待完善功能：
+- 用户登录接口实现
+- JWT Token机制
+- Redis会话管理
+- 权限验证机制
+- 头像上传功能
+- 用户端个人信息管理
+- 登录日志记录
+- 密码修改功能
+
+🔲 待实现功能：
+- 记住登录状态
+- 自动登录功能
+- 异常登录检测
+- 细粒度权限控制
+- 用户行为分析
+
+20250120 - Swagger API文档集成完成
+成功集成了Swagger 3.x (SpringDoc OpenAPI) 用于API文档管理：
+- 添加了springdoc-openapi-starter-webmvc-ui依赖
+- 创建了SwaggerConfig配置类
+- 为所有Controller添加了完整的API注解：
+  * UserController - 用户管理接口
+  * CategoryConfigController - 后台分类参数相关接口
+  * CategoryController - 商品分类管理接口
+  * EmailController - 邮件服务接口
+  * UploadController - 文件上传接口
+  * DownloadController - 文件下载接口
+  * LoginController - 用户登录接口
+- 修复了原有的@Api注解错误，统一使用Swagger 3.x注解
+- 创建了Swagger集成说明文档
+
+API文档访问地址：
+- Swagger UI: http://localhost:8080/swagger-ui.html
+- OpenAPI JSON: http://localhost:8080/v3/api-docs
+
+20250120 - 用户列表前后端联调完成
+成功实现了用户列表功能的前后端联调，取消了mock模拟数据：
+- 后端实现：
+  * 在UserController中添加了getUserList接口 (GET /user/list)
+  * 在UserService中添加了getUserList方法定义
+  * 在UserServiceimpl中实现了分页查询逻辑，支持按用户名、邮箱、手机号搜索
+  * 使用MyBatis Plus分页插件实现高效分页
+  * 按创建时间倒序排列，最新用户显示在前
+- 前端实现：
+  * 修改api.js配置，取消mock数据，使用真实接口
+  * 更新User.vue中的getUserTableD函数，处理真实接口响应
+  * 完善错误处理机制，提供用户友好的错误提示
+  * 保持原有的搜索、分页、格式化功能
+- 功能特性：
+  * 支持分页查询（10/20/50/100条每页）
+  * 支持多类型搜索（用户名、邮箱、手机号）
+  * 数据格式化显示（性别、权限等级、状态、时间）
+  * 完善的错误处理和用户提示
+- 创建了详细的联调说明文档
+
+用户列表接口：
+- 接口路径：GET /user/list
+- 请求参数：keyWord, searchType, page, pageSize
+- 响应格式：统一Result格式，包含分页信息

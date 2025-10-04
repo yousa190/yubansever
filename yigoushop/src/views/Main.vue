@@ -1,9 +1,27 @@
 <script setup lang="js">
 import '@/components/common/TopBar.vue'
 import '@/components/common/SearchArea.vue'
+import '@/components/common/Footer.vue'
+import { useCommonStore } from '@/stores/common.js'
+import {ref, watch} from 'vue'
+
+const scrollContainer = ref(null)
+const commonStore = useCommonStore()
+
+watch(
+  () => commonStore.shouldScrollTop,
+  (value) => {
+    if (value && scrollContainer.value) {
+      scrollContainer.value.scrollTo({ top: 0, behavior: 'smooth' })
+      // 重置状态
+      commonStore.setScrollTop(false)
+    }
+  }
+)
 </script>
 
 <template>
+  <el-scrollbar  ref="scrollContainer"  native >
   <div class="common-layout">
 
     <el-container class="common-container">
@@ -15,7 +33,6 @@ import '@/components/common/SearchArea.vue'
 
       <!--  define the Hearder  and Content component here     -->
       <el-container>
-
         <el-main class="main-container">
           <div class="searchArea w">
             <search-area/>
@@ -28,10 +45,16 @@ import '@/components/common/SearchArea.vue'
 
       </el-container >
 
+      <!-- footer      -->
+         <Footer/>
+
+
     </el-container>
   </div>
 
-
+    <!--  右侧菜单栏-->
+    <right-float-menu/>
+  </el-scrollbar>
 </template>
 
 <style scoped lang="less">
@@ -57,5 +80,6 @@ import '@/components/common/SearchArea.vue'
 .main-container {
   width: 100%;
 }
+
 
 </style>

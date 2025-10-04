@@ -15,15 +15,7 @@ export default {
             data:params,
         })
     },
-    // User
-    getTableData(){
-        return request({
-            url:'/home/tabledata',
-            method:"get",
-            mock: true,
-            data:{}
-        })
-    },
+
     getCountData(){
         return request({
             url:'/home/countdata',
@@ -40,35 +32,45 @@ export default {
             data:{}
         })
     },
+
+    // user
     getUserInfoData(data){
         return request({
-            url:'/home/userinfodata',
+            url:'/admin/user/list',
             method:"get",
-            mock: true,
-            data:data,
+            mock: false,
+            data: data,
+        })
+    },
+    toggleUserStatus(data){
+        return request({
+            url:'/admin/user/updateStatus',
+            method:"post",
+            mock: false,
+            data: data,
         })
     },
     deleteUser(data){
         return request({
-            url:'/home/deleteuser',
-            method:"get",
-            mock: true,
+            url:'/admin/user/delete',
+            method:"post",
+            mock: false,
             data:data,
         })
     },
     addUser(data){
         return request({
-            url:'/home/adduser',
+            url:'/admin/user/register',
             method:"post",
-            mock: true,
+            mock: false,
             data:data,
         })
     },
     editUser(data){
         return request({
-            url:'/home/edituser',
+            url:'/admin/user/update',
             method:"post",
-            mock: true,
+            mock: false,
             data:data,
         })
     },

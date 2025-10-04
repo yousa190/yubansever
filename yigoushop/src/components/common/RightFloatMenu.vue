@@ -1,13 +1,14 @@
 <script setup >
 import { ArrowUp, Service,ShoppingCart } from '@element-plus/icons-vue'
+import {ref, onMounted, onUnmounted} from 'vue'
+import { useCommonStore } from '@/stores/common.js'
+const commonStore = useCommonStore()
 
-const scrollToTop = () => {
-  // 平滑滚动到顶部
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
+
+const scrollToTop=()=>{
+  commonStore.setScrollTop(true)
 }
+
 
 </script>
 <template>

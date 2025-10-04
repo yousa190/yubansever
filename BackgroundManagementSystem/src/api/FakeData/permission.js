@@ -17,7 +17,7 @@ export default {
 //menuList用于后面做权限分配，也就是用户可以展示的菜单
 
             return {
-                code: 200,
+                code: '00000',
                 data: {
                     menuList: [
                         {

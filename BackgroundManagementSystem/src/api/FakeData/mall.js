@@ -102,7 +102,7 @@ export default {
         const paginatedList = paginate(filteredList, page, limit);
 
         return {
-            code: 200,
+            code: '00000',
             data: {
                 list: paginatedList,
                 count: filteredList.length, // 此处应该返回过滤后的总条数
@@ -130,7 +130,7 @@ export default {
 
         goodList = goodList.filter(good => good.good_id !== goodId);
         return {
-            code: 200,
+            code: '00000',
             msg: '删除成功',
         };
     },
@@ -154,9 +154,9 @@ export default {
                 comment
             });
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '添加成功',
                 },
             };
@@ -186,9 +186,9 @@ export default {
                 good.comment =comment;
             }
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '编辑成功',
                 },
             };

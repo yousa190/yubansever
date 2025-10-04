@@ -109,8 +109,7 @@ const products = ref([
 
 
 
-  <!--  右侧菜单栏-->
-  <right-float-menu/>
+
 
 </template>
 

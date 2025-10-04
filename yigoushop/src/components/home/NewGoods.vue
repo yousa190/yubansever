@@ -17,7 +17,7 @@ const products = ref([
   { id: 3, name: '商品3', price: '¥159', img1: '/bd1.webp', img2: '/bd2.webp' },
   { id: 4, name: '商品4', price: '¥89', img1: '/bd1.webp', img2: '/bd2.webp' },
   { id: 5, name: '商品5', price: '¥199', img1: '/bd1.webp', img2: '/bd2.webp' },
-  { id: 6, name: '商品6', price: '¥299', img1: '/bd1.webp', img2: '/bd2.webp' },
+  // { id: 6, name: '商品6', price: '¥299', img1: '/bd1.webp', img2: '/bd2.webp' },
 ])
 
 // 数组存储每个商品的悬停状态（索引对应ID-1）
@@ -38,11 +38,13 @@ const hoverStates = ref(new Array(products.value.length).fill(false))
             :slides-per-view="4"
             :space-between="16"
             :free-mode="true"
-            :free-mode-sticky="false"
+            :free-mode-sticky="true"
             :navigation="true"
             :loop="true"
             :autoplay="{ delay: 5000, disableOnInteraction: false }"
             class="product-swiper"
+            watch-slides-progress
+            watch-slides-visibility
           >
             <SwiperSlide
               v-for="(product, index) in products"
@@ -102,6 +104,7 @@ const hoverStates = ref(new Array(products.value.length).fill(false))
     .product-swiper {
       width: 100%;
       height: auto;
+      padding: 0 16px;
 
       .swiper-button-prev,
       .swiper-button-next {
@@ -119,7 +122,8 @@ const hoverStates = ref(new Array(products.value.length).fill(false))
     }
 
     .product-slide {
-      width: calc(100% / 4 - 12px) !important;
+      //width: calc(100% / 4 - 12px) !important;
+      flex: 0 0 auto;
       max-height: 480px;
 
       .product-card {

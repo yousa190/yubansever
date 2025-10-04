@@ -105,7 +105,7 @@ export default {
     const paginated = paginate(sorted, page, limit);
 
     return {
-      code: 200,
+      code: '00000',
       data: {
         list: paginated,
         count: filtered.length,
@@ -141,7 +141,7 @@ export default {
       orderList.unshift(newOrder);
 
       return {
-        code: 200,
+        code: '00000',
         data: newOrder
       };
     } catch (error) {
@@ -191,7 +191,7 @@ export default {
     }
 
     return {
-      code: 200,
+      code: '00000',
       data: order
     };
   },
@@ -214,7 +214,7 @@ export default {
     orderList[index].status = 'archived';
 
     return {
-      code: 200,
+      code: '00000',
       msg: '订单已归档'
     };
   }

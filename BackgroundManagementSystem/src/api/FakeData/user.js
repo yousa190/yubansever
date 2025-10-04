@@ -69,7 +69,7 @@ export default {
         const paginatedList = paginate(filteredList, page, limit);
 
         return {
-            code: 200,
+            code: '00000',
             data: {
                 list: paginatedList,
                 count: filteredList.length, // 数据总条数
@@ -95,7 +95,7 @@ export default {
 
         userList = userList.filter(user => user.user_id !== userId);
         return {
-            code: 200,
+            code: '00000',
             msg: '删除成功',
         };
     },
@@ -118,9 +118,9 @@ export default {
                 sex,
             });
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '添加成功',
                 },
             };
@@ -150,9 +150,9 @@ export default {
                 user.sex = parseInt(sex);
             }
             return {
-                code: 200,
+                code: '00000',
                 data: {
-                    code: 200,
+                    code: '00000',
                     message: '编辑成功',
                 },
             };

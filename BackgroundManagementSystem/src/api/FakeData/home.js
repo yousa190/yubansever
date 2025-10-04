@@ -1,7 +1,7 @@
 export default {
     tableData: ()=>{
         return{
-            code: 200,
+            code: '00000',
             data:{
                 tableData:[
                     {
@@ -28,7 +28,7 @@ export default {
     },
     countData: ()=>{
         return {
-            code: 200,
+            code: '00000',
             data:[{
                 name: "已支付订单",
                 value: 123,
@@ -65,7 +65,7 @@ export default {
     },
     chartData:()=>{
         return {
-            code: 200,
+            code: '00000',
             data: {
                 orderData: {
                     date :[

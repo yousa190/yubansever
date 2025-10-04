@@ -1,24 +1,26 @@
 package com.yuban.shop.service;
 
-import com.yuban.shop.pojo.origin.Category;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.yuban.shop.pojo.dto.CategoryDto;
+import com.yuban.shop.pojo.entity.Category;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
 
 @Transactional
-public interface CategoryService {
+public interface CategoryService  extends IService<Category>  {
     public Map<String, Object> getCategories(Long catPid, String catName, int page, int limit);
 
     public void deleteCategory(Long catId);
 
-    public Category addCategory(Category category);
+    public Category addCategory(CategoryDto categoryDto);
 
     /**
      * 编辑分类
-     * @param Category 编辑参数
+     * @param categoryDto 编辑参数
      */
-    public boolean updateCategory(Category Category);
+    public boolean updateCategory(CategoryDto categoryDto);
 
 }
 
