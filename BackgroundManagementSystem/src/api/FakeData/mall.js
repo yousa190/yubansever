@@ -42,20 +42,25 @@ function generateGoodsData(count = 5, options = {}) {
 
     // 核心数据模板
     const template = {
-        'good_id|+1': 1,
-        'goodname': () => {
+        'productId|+1': 1,
+        'productName': () => {
             const brands = ['华为', '小米', '索尼', 'Apple', '联想', '戴森', '美的'];
             const types = ['Pro', 'Max', 'ES', 'Series', 'Luxury', 'Smart', '旗舰版'];
             return `${Mock.Random.pick(brands)}${Mock.Random.ctitle(2,4)}${Mock.Random.pick(types)}`;
         },
-        'price|10-9999.2': 1,
-        'num|0-1000': 1,
-        'catname': () => {
+        'catId|1-10': 1,
+        'catName': () => {
             const categoryGroup = Mock.Random.pick(Object.values(categories));
             return Mock.Random.pick(categoryGroup);
         },
-        'image': () => `https://picsum.photos/id/${Mock.Random.integer(1,1000)}/100/100`,
-        'comment': () => {
+        'brand': () => Mock.Random.pick(['华为', '小米', '索尼', 'Apple', '联想', '戴森', '美的']),
+        'price|10-9999.2': 1,
+        'marketPrice|10-12000.2': 1,
+        'costPrice|5-8000.2': 1,
+        'stock|0-1000': 1,
+        'salesCount|0-500': 1,
+        'productSn': () => `SN${Mock.Random.integer(100000, 999999)}`,
+        'productDesc': () => {
             const features = [
                 '全面屏设计，视觉效果震撼',
                 '智能AI算法，使用更便捷',
@@ -64,6 +69,26 @@ function generateGoodsData(count = 5, options = {}) {
                 '环保材料，通过多项认证'
             ];
             return `${Mock.Random.ctitle(6,12)}，${Mock.Random.pick(features)}`;
+        },
+        'detailContent': () => Mock.Random.cparagraph(3, 8),
+        'onSale': () => Mock.Random.boolean(),
+        'isNew': () => Mock.Random.boolean(),
+        'isHot': () => Mock.Random.boolean(),
+        'unit': () => Mock.Random.pick(['台', '部', '件', '个', '套']),
+        'status|0-1': 1,
+        'images': () => {
+            const imageCount = Mock.Random.integer(3, 8);
+            const images = [];
+            for (let i = 0; i < imageCount; i++) {
+                images.push({
+                    imageId: i + 1,
+                    productId: 1,
+                    imageUrl: `https://picsum.photos/id/${Mock.Random.integer(1,1000)}/300/300`,
+                    sortOrder: i,
+                    main: i === 0
+                });
+            }
+            return images;
         }
     };
 
@@ -91,11 +116,11 @@ export default {
      * @returns {Object} - 返回分页后的分类列表
      */
     getgoodList(config) {
-        const { goodname, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = parseUrlParams(config.url);
+        const { productName, page = DEFAULT_PAGE, limit = DEFAULT_LIMIT } = parseUrlParams(config.url);
 
         // 过滤商品列表
-        const filteredList = goodname
-            ? goodList.filter(good => good.goodname.includes(goodname))
+        const filteredList = productName
+            ? goodList.filter(good => good.productName.includes(productName))
             : goodList;
 
         // 执行分页
@@ -113,22 +138,46 @@ export default {
     },
 
     /**
+     * 获取商品详情
+     * @param {Object} config - 请求配置
+     * @param {string} config.url - 请求 URL，包含查询参数
+     * @returns {Object} - 返回商品详情
+     */
+    getGoodDetail(config) {
+        const { productId } = parseUrlParams(config.url);
+        const productIdNum = parseInt(productId, 10);
+        const good = goodList.find(good => good.productId === productIdNum);
+        
+        if (good) {
+            return {
+                code: '00000',
+                data: good
+            };
+        } else {
+            return {
+                code: '40000',
+                msg: '商品不存在'
+            };
+        }
+    },
+
+    /**
      * 删除商品
      * @param {Object} config - 请求配置
      * @param {string} config.url - 请求 URL，包含查询参数
      * @returns {Object} - 返回操作结果
      */
     deletegood(config) {
-        const { good_id } = parseUrlParams(config.url);
-        const goodId = parseInt(good_id, 10);
-        if (!good_id) {
+        const { productId } = parseUrlParams(config.url);
+        const productIdNum = parseInt(productId, 10);
+        if (!productId) {
             return {
-                code: -999,
+                code: '40000',
                 msg: '参数错误',
             };
         }
 
-        goodList = goodList.filter(good => good.good_id !== goodId);
+        goodList = goodList.filter(good => good.productId !== productIdNum);
         return {
             code: '00000',
             msg: '删除成功',
@@ -143,16 +192,12 @@ export default {
      */
     addgood(config) {
         try {
-            const { goodname, price, num, catname, image,comment } = typeof config.body === 'string' ? JSON.parse(config.body) : config.body;;
-            goodList.unshift({
-                good_id: size++,
-                goodname,
-                price,
-                num,
-                catname,
-                image,
-                comment
-            });
+            const productData = typeof config.body === 'string' ? JSON.parse(config.body) : config.body;
+            const newProduct = {
+                ...productData,
+                productId: size++
+            };
+            goodList.unshift(newProduct);
             return {
                 code: '00000',
                 data: {
@@ -162,7 +207,7 @@ export default {
             };
         } catch (error) {
             return {
-                code: -999,
+                code: '40000',
                 msg: '参数解析错误',
             };
         }
@@ -175,30 +220,30 @@ export default {
      */
     editgood(config) {
         try {
-            const {good_id,goodname, price, num, catname, image,comment } = JSON.parse(config.body);
-            const good = goodList.find(good => good.good_id === good_id);
-            if (good) {
-                good.goodname = goodname;
-                good.price = price;
-                good.num = num;
-                good.catname = catname;
-                good.image =image;
-                good.comment =comment;
-            }
-            return {
-                code: '00000',
-                data: {
+            const productData = typeof config.body === 'string' ? JSON.parse(config.body) : config.body;
+            const { productId } = productData;
+            const productIndex = goodList.findIndex(good => good.productId === productId);
+            
+            if (productIndex !== -1) {
+                goodList[productIndex] = { ...goodList[productIndex], ...productData };
+                return {
                     code: '00000',
-                    message: '编辑成功',
-                },
-            };
+                    data: {
+                        code: '00000',
+                        message: '编辑成功',
+                    },
+                };
+            } else {
+                return {
+                    code: '40000',
+                    msg: '未找到该商品',
+                };
+            }
         } catch (error) {
             return {
-                code: -999,
+                code: '40000',
                 msg: '参数解析错误',
             };
         }
     },
-
-
 }

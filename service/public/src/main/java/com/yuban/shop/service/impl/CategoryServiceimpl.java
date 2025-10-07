@@ -30,8 +30,9 @@ public class CategoryServiceimpl  extends ServiceImpl<CategoryMapper,Category> i
     public Map<String, Object> getCategories(Long catPid, String catName, int page, int limit) {
         Page<Category> pageParam = new Page<>(page, limit);
         LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Category::getIsDel,false);
         queryWrapper.eq(catPid!=null,Category::getCatPid,catPid);
-        queryWrapper.eq(!catName.isBlank(),Category::getCatName,catName);
+        queryWrapper.like(!catName.isBlank(),Category::getCatName,catName);
         Page<Category> pageData = baseMapper.selectPage( pageParam,queryWrapper);
         Map<String, Object> response = new HashMap<>();
         List<CategoryVo> res = BeanCopyUtils.copyBeanList(pageData.getRecords(), CategoryVo.class);
@@ -128,6 +129,11 @@ public class CategoryServiceimpl  extends ServiceImpl<CategoryMapper,Category> i
             if (newParent.getCatLevel() >= 3) { // 假设最大层级为3
                 throw new SystemException(HttpCodeEnum.PARENT_CATEGORY_LEVEL_EXCEED);
             }
+            
+            // 检查是否试图将分类设置为自己的子孙分类作为父分类
+            if (isDescendantOf(newParent, category.getCatId())) {
+                throw new SystemException(HttpCodeEnum.INVALID_PARENT_CATEGORY);
+            }
         }
 
         // 4. 更新分类信息
@@ -142,6 +148,29 @@ public class CategoryServiceimpl  extends ServiceImpl<CategoryMapper,Category> i
         // 5. 递归更新子分类层级
         updateChildrenLevel(updatedCategory.getCatId(), updatedCategory.getCatLevel() + 1);
         return true;
+    }
+    
+    /**
+     * 检查目标分类是否是源分类的子孙分类
+     * @param target 目标分类
+     * @param sourceId 源分类ID
+     * @return true表示target是source的子孙分类，false表示不是
+     */
+    private boolean isDescendantOf(Category target, Long sourceId) {
+        if (target.getCatId().equals(sourceId)) {
+            return true;
+        }
+        
+        if (target.getCatPid() == 0) {
+            return false;
+        }
+        
+        Category parent = baseMapper.selectById(target.getCatPid());
+        if (parent == null) {
+            return false;
+        }
+        
+        return isDescendantOf(parent, sourceId);
     }
 
     /**

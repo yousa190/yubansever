@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/admin/login")
 @Tag(name = "用户登录接口", description = "用户登录、注销等相关接口")
 public class LoginController {
 

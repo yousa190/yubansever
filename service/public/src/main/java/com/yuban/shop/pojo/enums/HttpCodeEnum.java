@@ -39,6 +39,7 @@ public enum HttpCodeEnum {
  SAME_PARENT_CATEGORY_DUPLICATE_NAME("A0431", "同一父分类下名称不能重复,包含重复内容"),
  PARENT_CATEGORY_NOT_EXIST("A0422", "父分类不存在"),
  PARENT_CATEGORY_LEVEL_EXCEED("A0421", "父分类层级已达上限"),
+ INVALID_PARENT_CATEGORY("A0421", "不能将分类设置为自己的子孙分类作为父分类"),
 
  // 系统执行出错（B00xx）
  SYSTEM_ERROR("B0001", "系统执行出错，请稍后重试"),

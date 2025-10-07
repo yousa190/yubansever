@@ -37,7 +37,7 @@ public class CategoryController {
     public Result deleteCategory(
             @Parameter(description = "要删除的分类ID", required = true) @RequestParam Long catId) {
         categoryService.deleteCategory(catId);
-        return Result.success("success!");
+        return Result.success("删除成功");
     }
 
     @Operation(summary = "添加分类", description = "新增商品分类")
@@ -46,7 +46,7 @@ public class CategoryController {
             @Parameter(description = "分类信息", required = true) @RequestBody CategoryDto category) {
         log.info(category.toString());
         Category saved = categoryService.addCategory(category);
-        return Result.success("success!");
+        return Result.success("添加成功");
     }
 
     @Operation(summary = "更新分类", description = "更新商品分类信息")
@@ -55,6 +55,6 @@ public class CategoryController {
             @Parameter(description = "分类信息", required = true) @RequestBody CategoryDto category) {
         log.info(category.toString());
         categoryService.updateCategory(category);
-        return Result.success("success!");
+        return Result.success("更新成功");
     }
 }

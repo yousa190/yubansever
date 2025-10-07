@@ -1,4 +1,4 @@
-package com.yuban.shop.controller;
+package com.yubansever.controller;
 
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +33,14 @@ public class DownloadController {
             @Parameter(description = "文件名", required = true) @PathVariable String filename, 
             HttpServletRequest request,
             HttpServletResponse response){
+        log.info("开始下载图片，类型：{}，文件名：{}", type, filename);
+        
         // 获取文件路径
         Path filePath = Paths.get(downloadPath, "images", type, filename);
         File file = filePath.toFile();
         // 检查文件是否存在
         if (!file.exists()) {
+            log.warn("文件不存在，路径：{}", filePath);
             response.setStatus(HttpServletResponse.SC_NOT_FOUND); // 返回 404 错误
             return ;
         }
@@ -45,8 +48,9 @@ public class DownloadController {
         // 下载文件
         try {
             writeF(response, file);
+            log.info("文件下载成功，路径：{}", filePath);
         } catch (Exception e) {
-            log.error("文件下载失败", e); // 使用日志框架
+            log.error("文件下载失败，路径：{}", filePath, e); // 使用日志框架
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 返回 500 错误
         }
     }

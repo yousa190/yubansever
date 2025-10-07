@@ -17,8 +17,10 @@ Mock.mock(/api\/home\/edituser/,"post",Fakeuser.editUser)
 Mock.mock(/permission\/getmenu/,"post",MenuApi.getMenu)
 
 Mock.mock(/api\/good\/goodlist/,"get",Fakemall.getgoodList)
+Mock.mock(/api\/good\/detail/,"get",Fakemall.getGoodDetail)
 Mock.mock(/api\/good\/deletegood/,"get",Fakemall.deletegood)
 Mock.mock(/api\/good\/addgood/,"post",Fakemall.addgood)
+Mock.mock(/api\/good\/editgood/,"post",Fakemall.editgood)
 
 Mock.mock(/api\/mall\/catelist/,"get",FakeCate.getcateList)
 

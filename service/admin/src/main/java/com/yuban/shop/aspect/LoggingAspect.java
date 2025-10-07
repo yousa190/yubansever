@@ -20,7 +20,7 @@ public class LoggingAspect {
         Object proceed = joinPoint.proceed();
 
         long executionTime = System.currentTimeMillis() - start;
-        logger.info("Method {} executed in {} ms", joinPoint.getSignature(), executionTime);
+        logger.info("方法 {} 执行耗时 {} ms", joinPoint.getSignature(), executionTime);
 
         return proceed;
     }

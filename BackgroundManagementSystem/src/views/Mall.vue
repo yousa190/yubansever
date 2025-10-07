@@ -1,128 +1,132 @@
 <script setup lang="js">
 import goodTree from '@/components/goodTree.vue'
-import goodImg from '@/components/goodimg.vue'
+import goodImg from '@/components/goodImg.vue'
 import WangEditor from '@/components/WangEditor.vue'
 import {reactive, ref, onMounted, getCurrentInstance,nextTick} from "vue";
 import {ElMessage, ElMessageBox} from "element-plus";
 
-const dialogVisible =ref(false)
-const innerdialogVisible =ref(false)
-const action =ref('add')
+const dialogVisible = ref(false)
+const innerdialogVisible = ref(false)
+const action = ref('add')
+const selectedGoods = ref([]) // 用于存储选中的商品
+
+// 图片上传组件引用
+const goodImgRef = ref(null)
+
 const goodForm=reactive({
-  goodname: '',
+  productId: null,
+  productName: '',
+  catId: null,
+  catName: '',
+  brand: '',
   price: 0,
-  num: 0,
-  catname: '',
-  image: 'https://picsum.photos/id/416/10',
-  comment: ''
+  marketPrice: 0,
+  costPrice: 0,
+  stock: 0,
+  salesCount: 0,
+  productSn: '',
+  productDesc: '',
+  detailContent: '',
+  onSale: true,
+  isNew: false,
+  isHot: false,
+  unit: '',
+  status: 1,
+  images: []
 })
 const {proxy} =getCurrentInstance()
 const formInline =reactive({
-  keyWord:'',
+  productName: '',
 })
 const tableLabels = reactive([
   {
-    prop: 'good_id',
-    label: 'id',
+    prop: 'productId',
+    label: '商品ID',
   },
   {
-    prop: 'goodname',
+    prop: 'productName',
     label: '商品名称',
     width: 200,
   },
   {
     prop: 'price',
-    label: '商品价格',
-    width: 200,
+    label: '价格',
+    width: 120,
   },
   {
-    prop: 'num',
-    label: '商品数量',
-    width: 200,
+    prop: 'marketPrice',
+    label: '市场价',
+    width: 120,
   },
   {
-    prop: 'catname',
+    prop: 'stock',
+    label: '库存',
+    width: 120,
+  },
+  {
+    prop: 'salesCount',
+    label: '销量',
+    width: 120,
+  },
+  {
+    prop: 'catName',
     label: '商品分类',
     width: 200,
   },
   {
-    prop: 'image',
-    label: '商品图片',
+    prop: 'brand',
+    label: '品牌',
     width: 150,
   },
   {
-    prop: 'comment',
-    label: '商品描述',
-    width: 300,
-    showTooltip:true,
-  },
-])
-const goodData = ref([
-  {
-    "good_id": 1,
-    "goodname": "华为Mate50 Pro",
-    "price": 5999.99,
-    "num": 100,
-    "catname": "一级类目/数码产品",
-    "image": "https://picsum.photos/id/21/100/100",
-    "comment": "旗舰级智能手机，搭载超光变XMAGE影像系统"
+    prop: 'images',
+    label: '商品图片',
+    width: 150,
+    showTooltip: true
   },
   {
-    "good_id": 2,
-    "goodname": "小米电视ES65",
-    "price": 1999.50,
-    "num": 50,
-    "catname": "二级类目/家用电器",
-    "image": "https://picsum.photos/id/32/100/100",
-    "comment": "4K超高清金属全面屏，支持MEMC运动补偿"
+    prop: 'onSale',
+    label: '上架状态',
+    width: 100,
+    formatter: (row) => row.onSale ? '上架' : '下架'
   },
   {
-    "good_id": 3,
-    "goodname": "索尼WH-1000XM5",
-    "price": 299.00,
-    "num": 200,
-    "catname": "三级类目/音频设备",
-    "image": "https://picsum.photos/id/43/100/100",
-    "comment": "智能降噪头戴式耳机，30小时超长续航"
+    prop: 'isNew',
+    label: '新品',
+    width: 80,
+    formatter: (row) => row.isNew ? '是' : '否'
   },
   {
-    "good_id": 4,
-    "goodname": "Apple Watch Series 8",
-    "price": 899.00,
-    "num": 80,
-    "catname": "二级类目/智能穿戴",
-    "image": "https://picsum.photos/id/54/100/100",
-    "comment": "全天候视网膜显示屏，支持血氧监测功能"
-  },
-  {
-    "good_id": 5,
-    "goodname": "联想拯救者Y9000P",
-    "price": 8999.99,
-    "num": 30,
-    "catname": "一级类目/电脑整机",
-    "image": "https://picsum.photos/id/65/100/100",
-    "comment": "16英寸电竞笔记本，搭载RTX3070显卡"
+    prop: 'isHot',
+    label: '热销',
+    width: 80,
+    formatter: (row) => row.isHot ? '是' : '否'
   }
 ])
+const goodData = ref([])
 const resetForm = () => {
   if (proxy.$refs.formgood) {
     proxy.$refs.formgood.resetFields();
-    goodForm.comment=''
+    goodForm.detailContent=''
   }
 }
 const config=reactive({
-  goodname:'',
+  productName: '',
   page: 1,
+  pageSize: 10,
+  total: 0
 })
 const rules = reactive({
-  goodname:[{ required: true, message: "商品名是必填项", trigger: "blur" }],
-  catname: [{ required: true, message: "分类名是必选项", trigger: "blur" }],
+  productName:[{ required: true, message: "商品名是必填项", trigger: "blur" }],
+  catId: [{ required: true, message: "分类是必选项", trigger: "blur" }],
   price:[{  required: true, message: "请输入价格", trigger: "blur" },
     {type:'number', message: "价格必须是数字", trigger: "change",}],
-  num:[{  required: true, message: "请输入数量", trigger: "blur" },
-    {type:'number', message: "数量必须是数字", trigger: "change",}],
+  stock:[{  required: true, message: "请输入库存", trigger: "blur" },
+    {type:'number', message: "库存必须是数字", trigger: "change",}],
+  productDesc: [{ required: false, message: "请输入商品简介", trigger: "blur" }]
 })
 const catinfo =ref({})
+const categoryParams = ref([])
 
 const setConfig=(data)=>{
   catinfo.value=data
@@ -130,16 +134,18 @@ const setConfig=(data)=>{
 
 const setCatVal =()=>{
   innerdialogVisible.value=false
-  goodForm.catname=catinfo.value.catname
-  // console.log(catinfo)
+  goodForm.catId=catinfo.value.catId
+  goodForm.catName=catinfo.value.catName
+  // 保存分类ID，用于获取分类参数
+  // TODO: 在这里调用接口获取分类参数
+  // getCategoryParams(catinfo.value.catId)
   console.log(goodForm)
 }
 
 const updatecomment=(data)=>{
-  goodForm.comment=data.value
+  goodForm.detailContent=data.value
   // console.log(goodForm.comment)
 }
-
 
 const getgoodData= async ()=>{
   let res= await proxy.$api.getGoodList(config)
@@ -147,18 +153,184 @@ const getgoodData= async ()=>{
   config.total=res.count
 }
 
+// 处理表格选择变化
+const handleSelectionChange = (selection) => {
+  selectedGoods.value = selection
+}
+
+// 批量删除商品
+const batchDeleteGoods = async () => {
+  if (selectedGoods.value.length === 0) {
+    ElMessage({
+      message: '请先选择要删除的商品',
+      type: 'warning'
+    })
+    return
+  }
+
+  ElMessageBox.confirm(
+    `确定要删除选中的${selectedGoods.value.length}个商品吗？此操作不可恢复！`,
+    '删除确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(async () => {
+    try {
+      // 执行批量删除
+      const deletePromises = selectedGoods.value.map(item => 
+        proxy.$api.deleteGood({ productId: item.productId })
+      )
+      
+      await Promise.all(deletePromises)
+      
+      ElMessage({
+        message: '批量删除成功',
+        type: 'success'
+      })
+      
+      // 清空选择
+      selectedGoods.value = []
+      // 重新加载数据
+      getgoodData()
+    } catch (error) {
+      ElMessage({
+        message: '批量删除失败',
+        type: 'error'
+      })
+    }
+  })
+}
+
+// 批量上架/下架商品
+const batchToggleSaleStatus = async (onSale) => {
+  if (selectedGoods.value.length === 0) {
+    ElMessage({
+      message: '请先选择商品',
+      type: 'warning'
+    })
+    return
+  }
+
+  const statusText = onSale ? '上架' : '下架'
+  
+  ElMessageBox.confirm(
+    `确定要将选中的${selectedGoods.value.length}个商品${statusText}吗？`,
+    '操作确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(async () => {
+    try {
+      // 执行批量操作
+      const updatePromises = selectedGoods.value.map(item => {
+        const updatedItem = { ...item, onSale }
+        return proxy.$api.editGood(updatedItem)
+      })
+      
+      await Promise.all(updatePromises)
+      
+      ElMessage({
+        message: `批量${statusText}成功`,
+        type: 'success'
+      })
+      
+      // 清空选择
+      selectedGoods.value = []
+      // 重新加载数据
+      getgoodData()
+    } catch (error) {
+      ElMessage({
+        message: `批量${statusText}失败`,
+        type: 'error'
+      })
+    }
+  })
+}
+
+// 批量设置热销/新品状态
+const batchSetStatus = async (field, value) => {
+  if (selectedGoods.value.length === 0) {
+    ElMessage({
+      message: '请先选择商品',
+      type: 'warning'
+    })
+    return
+  }
+
+  const statusText = field === 'isHot' ? (value ? '设为热销' : '取消热销') : 
+                    field === 'isNew' ? (value ? '设为新品' : '取消新品') : ''
+
+  ElMessageBox.confirm(
+    `确定要将选中的${selectedGoods.value.length}个商品${statusText}吗？`,
+    '操作确认',
+    {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+    }
+  ).then(async () => {
+    try {
+      // 执行批量操作
+      const updatePromises = selectedGoods.value.map(item => {
+        const updatedItem = { ...item, [field]: value }
+        return proxy.$api.editGood(updatedItem)
+      })
+      
+      await Promise.all(updatePromises)
+      
+      ElMessage({
+        message: `批量${statusText}成功`,
+        type: 'success'
+      })
+      
+      // 清空选择
+      selectedGoods.value = []
+      // 重新加载数据
+      getgoodData()
+    } catch (error) {
+      ElMessage({
+        message: `批量${statusText}失败`,
+        type: 'error'
+      })
+    }
+  })
+}
 
 const handleSearch=(event)=>{
   if (event) {
     event.preventDefault(); // 阻止默认行为
   }
-  config.goodname =formInline.keyWord
+  config.productName =formInline.productName
   getgoodData()
 }
 
-
 const openAddDialog = ()=>{
   action.value = 'add';
+  Object.assign(goodForm, {
+    productId: null,
+    productName: '',
+    catId: null,
+    catName: '',
+    brand: '',
+    price: 0,
+    marketPrice: 0,
+    costPrice: 0,
+    stock: 0,
+    salesCount: 0,
+    productSn: '',
+    productDesc: '',
+    detailContent: '',
+    onSale: true,
+    isNew: false,
+    isHot: false,
+    unit: '',
+    status: 1,
+    images: []
+  });
   dialogVisible.value = true;
 
   // 等待 DOM 更新后操作表单
@@ -166,13 +338,29 @@ const openAddDialog = ()=>{
       resetForm()
   });
 }
-const openEditDialog=(row)=>{
+
+const openEditDialog=async (row)=>{
   action.value = 'edit';
-  Object.assign(goodForm, row);
+  // 获取商品详情
+  let res = await proxy.$api.getGoodDetail({productId: row.productId})
+  
+  // 确保图片数据格式正确
+  if (res.images && Array.isArray(res.images)) {
+    res.images = res.images.map((img, index) => ({
+      ...img,
+      imageName: img.imageName || `Image_${index + 1}`,
+      sortOrder: img.sortOrder !== undefined ? img.sortOrder : index,
+      main: img.main !== undefined ? img.main : index === 0
+    }));
+  } else {
+    res.images = [];
+  }
+  
+  Object.assign(goodForm, res);
   dialogVisible.value = true;
 }
 
-const handleClose = (done) => {
+const handleClose = async (done) => {
   dialogVisible.value = false
   // 重置表单数据
   resetForm()
@@ -182,17 +370,14 @@ const handleClose = (done) => {
   done();
 };
 
-const handleCancel = () => {
+const handleCancel = async () => {
   dialogVisible.value = false;
   resetForm()
 }
 
-
-
-
 const delgood=(row)=>{
-  ElMessageBox.confirm("是否删除?").then(async ()=>{
-        await proxy.$api.deleteGood(row)
+  ElMessageBox.confirm("是否删除该商品?").then(async ()=>{
+        await proxy.$api.deleteGood({productId: row.productId})
         ElMessage({
           showClose:false,
           message:"删除成功",
@@ -203,7 +388,13 @@ const delgood=(row)=>{
         })
         getgoodData()
       }
-  )}
+  ).catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '已取消删除',
+        })
+      })
+}
 
 const  onSubmit= async ()=>{
   try {
@@ -211,18 +402,18 @@ const  onSubmit= async ()=>{
     const valid = await proxy.$refs.formgood.validate();
     if (!valid) return; // 校验失败直接退出
 
-
     // 3. 根据操作类型调用接口
     let res;
     if (action.value === 'add') {
       res = await proxy.$api.addGood(goodForm);
     } else {
-      res = await proxy.$api.addGood(goodForm); // 补充编辑逻辑
+      // 编辑商品需要传递商品ID
+      res = await proxy.$api.editGood(goodForm);
     }
 
     console.log(res)
 
-    if (res.code === 200) { // 接口返回 code=200 表示成功
+    if (res.code === '00000') { // 接口返回 code=00000 表示成功
       ElMessage({
         message: action.value === 'add' ? '新增成功' : '编辑成功',
         type: 'success',
@@ -252,6 +443,35 @@ const handlePageChange =(page)=>{
   getgoodData()
 }
 
+// 批量操作处理函数
+const handleBatchCommand = (command) => {
+  switch (command) {
+    case 'delete':
+      batchDeleteGoods()
+      break
+    case 'onSale':
+      batchToggleSaleStatus(true)
+      break
+    case 'offSale':
+      batchToggleSaleStatus(false)
+      break
+    case 'setHot':
+      batchSetStatus('isHot', true)
+      break
+    case 'cancelHot':
+      batchSetStatus('isHot', false)
+      break
+    case 'setNew':
+      batchSetStatus('isNew', true)
+      break
+    case 'cancelNew':
+      batchSetStatus('isNew', false)
+      break
+    default:
+      break
+  }
+}
+
 onMounted(()=>{
   getgoodData()
 })
@@ -259,37 +479,69 @@ onMounted(()=>{
 
 <template>
   <div class="good-header">
-  <el-button type="primary" @click="openAddDialog"  >添加商品</el-button>
-  <el-form :inline="true" :model="formInline"   @submit.native.prevent >
-    <el-form-item   >
-      <el-input placeholder="请输入商品名" v-model="formInline.keyWord"
-                @keyup.enter="handleSearch"
-      ></el-input>
-
-    </el-form-item>
-    <el-form-item  >
-      <el-button   type="primary" @click="handleSearch">搜索</el-button>
-    </el-form-item>
-  </el-form>
-</div>
+    <div class="header-left">
+      <el-button type="primary" @click="openAddDialog">添加商品</el-button>
+      
+      <!-- 批量操作按钮 -->
+      <el-dropdown v-if="selectedGoods.length > 0">
+        <el-button type="danger">
+          批量操作 <el-icon class="el-icon--right"><arrow-down /></el-icon>
+        </el-button>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item @click="batchDeleteGoods">批量删除</el-dropdown-item>
+            <el-dropdown-item @click="batchToggleSaleStatus(true)">批量上架</el-dropdown-item>
+            <el-dropdown-item @click="batchToggleSaleStatus(false)">批量下架</el-dropdown-item>
+            <el-dropdown-item @click="batchSetStatus('isHot', true)">设为热销</el-dropdown-item>
+            <el-dropdown-item @click="batchSetStatus('isHot', false)">取消热销</el-dropdown-item>
+            <el-dropdown-item @click="batchSetStatus('isNew', true)">设为新品</el-dropdown-item>
+            <el-dropdown-item @click="batchSetStatus('isNew', false)">取消新品</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+      
+      <el-tag v-if="selectedGoods.length > 0" type="danger" effect="dark">
+        已选择 {{ selectedGoods.length }} 项
+      </el-tag>
+    </div>
+    
+    <el-form :inline="true" :model="formInline" @submit.native.prevent>
+      <el-form-item label="商品名称">
+        <el-input placeholder="请输入商品名" v-model="formInline.productName"
+                  @keyup.enter="handleSearch"
+        ></el-input>
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="handleSearch">搜索</el-button>
+      </el-form-item>
+    </el-form>
+  </div>
   <div class="table">
     <el-card>
-      <el-table :data="goodData"  type="" stripe border ref="table">
+      <el-table :data="goodData"  type="" stripe border ref="table" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" />
         <el-table-column v-for="item in tableLabels "
                          :key="item.prop"
                          :width="item.width ? item.width : '120px'"
                          :prop="item.prop"
                          :label="item.label"
+                         :formatter="item.formatter"
                          :show-overflow-tooltip="item.showTooltip" >
-          <template v-if="item.prop === 'image'"  #default="scope">
-            <img
-                :src="scope.row[item.prop]"
-                alt="商品图片"
-                class="goods-image"
-            />
+          <template v-if="item.prop === 'images'" #default="scope">
+            <div class="image-cell" v-if="scope.row.images && scope.row.images.length > 0">
+              <el-image
+                :src="scope.row.images[0].imageUrl"
+                class="table-image"
+                :preview-src-list="scope.row.images.map(img => img.imageUrl)"
+                preview-teleported
+                fit="cover"
+              />
+              <span v-if="scope.row.images.length > 1" class="image-count">
+                +{{ scope.row.images.length - 1 }}
+              </span>
+            </div>
+            <span v-else>暂无图片</span>
           </template>
-
         </el-table-column>
         <el-table-column fixed="right" label="操作" min-width="140" width="240">
           <template #default="scope">
@@ -345,67 +597,142 @@ onMounted(()=>{
       </el-row>
     </el-dialog>
 
-    <el-form  ref="formgood"  :inline="true" :model="goodForm" :rules="rules"   >
-      <!-- 分类选择 -->
-      <div class="category-section">
-        <el-row>
-          <el-col :span="14">
-            <el-button type="primary" @click="innerdialogVisible=true" size="default">选择商品分类</el-button>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="14">
-            <el-form-item label="商品分类:" prop="catname">
-              <el-text v-if="goodForm.catname "  size="large" type="success">{{ goodForm.catname }}</el-text>
-              <el-text v-else>请选择商品分类</el-text>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-
-      <!-- 其他表单项 -->
-      <el-row>
-        <el-col :span="18">
-          <el-form-item label="商品名称:" prop="goodname">
-            <el-input v-model="goodForm.goodname" placeholder="请输入商品名" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <!-- 商品价格/数量 -->
-      <el-row>
-        <el-col :span="18">
-          <el-form-item label="商品价格:" prop="price">
-            <el-input v-model.number="goodForm.price" placeholder="请输入商品价格" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="18">
-          <el-form-item label="商品数量:" prop="num">
-            <el-input v-model.number="goodForm.num" placeholder="请输入商品数量" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-
-      <!-- 图片上传 -->
-      <el-row>
-        <el-col :span="15">
-          <div class="upload-section">
-            <good-img/>
+    <el-form  ref="formgood"  :model="goodForm" :rules="rules"   >
+      <el-tabs type="border-card">
+        <el-tab-pane label="基础信息">
+          <div class="form-section">
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="商品名称:" prop="productName">
+                  <el-input v-model="goodForm.productName" placeholder="请输入商品名称" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="商品分类:" prop="catId">
+                  <el-button type="primary" @click="innerdialogVisible=true" size="default">选择商品分类</el-button>
+                  <el-text v-if="goodForm.catName" size="large" type="success">{{ goodForm.catName }}</el-text>
+                  <el-text v-else type="danger">请选择商品分类</el-text>
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <el-row>
+              <el-col :span="12">
+                <el-form-item label="品牌:" prop="brand">
+                  <el-input v-model="goodForm.brand" placeholder="请输入品牌" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="商品编号:" prop="productSn">
+                  <el-input v-model="goodForm.productSn" placeholder="请输入商品编号" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="价格:" prop="price">
+                  <el-input v-model.number="goodForm.price" placeholder="请输入价格" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="市场价:" prop="marketPrice">
+                  <el-input v-model.number="goodForm.marketPrice" placeholder="请输入市场价" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="成本价:" prop="costPrice">
+                  <el-input v-model.number="goodForm.costPrice" placeholder="请输入成本价" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <el-row>
+              <el-col :span="8">
+                <el-form-item label="库存:" prop="stock">
+                  <el-input v-model.number="goodForm.stock" placeholder="请输入库存" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="销量:" prop="salesCount">
+                  <el-input v-model.number="goodForm.salesCount" placeholder="请输入销量" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="单位:" prop="unit">
+                  <el-input v-model="goodForm.unit" placeholder="请输入单位" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="商品简介:" prop="productDesc">
+                  <el-input 
+                    v-model="goodForm.productDesc" 
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请输入商品简介" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="状态设置:">
+                  <el-checkbox v-model="goodForm.onSale">
+                    上架
+                  </el-checkbox>
+                  <el-checkbox v-model="goodForm.isNew">
+                    新品
+                  </el-checkbox>
+                  <el-checkbox v-model="goodForm.isHot">
+                    热销
+                  </el-checkbox>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </div>
-        </el-col>
-      </el-row>
-
-      <!-- 富文本编辑器 -->
-      <el-row>
-        <el-form-item   prop="comment">
-          <div class="editor-wrapper">
-            <wang-editor  :Content="goodForm.comment"  @comment-sent="updatecomment" />
+        </el-tab-pane>
+        
+        <el-tab-pane label="详细内容">
+          <div class="form-section">
+            <el-row>
+              <el-col :span="24">
+                <el-form-item label="详细内容:" prop="detailContent">
+                  <div class="editor-wrapper">
+                    <wang-editor  :Content="goodForm.detailContent"  @comment-sent="updatecomment" />
+                  </div>
+                </el-form-item>
+              </el-col>
+            </el-row>
           </div>
-        </el-form-item >
-      </el-row>
-
+        </el-tab-pane>
+        
+        <el-tab-pane label="商品图片">
+          <div class="form-section">
+            <el-alert
+              title="图片上传说明"
+              type="info"
+              description="第一张图片将作为主图显示在商品列表中，您可以点击图片设置为主图"
+              show-icon
+              style="margin-bottom: 20px;"
+            />
+            <el-row>
+              <el-col :span="24">
+                <div class="upload-section">
+                  <good-img 
+                    ref="goodImgRef"
+                    :images="goodForm.images" 
+                    @update:images="goodForm.images = $event" 
+                  />
+                </div>
+              </el-col>
+            </el-row>
+          </div>
+        </el-tab-pane>
+      </el-tabs>
+      
       <!-- 操作按钮 -->
       <div class="action-buttons" >
         <el-form-item>
@@ -419,13 +746,20 @@ onMounted(()=>{
 </template>
 
 <style scoped lang="less">
-
-
-
 .good-header{
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .el-dropdown {
+      margin-left: 10px;
+    }
+  }
 }
 
 .table {
@@ -465,6 +799,23 @@ onMounted(()=>{
   cursor: zoom-in; /* 光标提示可缩放 */
 }
 
+.image-cell {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.table-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.image-count {
+  font-size: 12px;
+  color: #999;
+}
 
 /* 全局 CSS 文件 */
 .el-row {
@@ -599,6 +950,10 @@ onMounted(()=>{
       color: #10b981;
       font-weight: 500;
     }
+
+    &[type="danger"] {
+      color: #f56565;
+    }
   }
 }
 
@@ -681,6 +1036,19 @@ onMounted(()=>{
   }
 }
 
+.form-section {
+  padding: 20px 0;
+}
+
+.param-group {
+  margin-bottom: 20px;
+
+  h4 {
+    margin: 10px 0;
+    color: #333;
+    font-weight: 600;
+  }
+}
 
 /* 移动端适配 */
 @media (max-width: 768px) {

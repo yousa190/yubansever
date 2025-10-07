@@ -79,27 +79,65 @@ export default {
     // mall
     getGoodList(data){
         return request({
-            url:'/good/goodlist',
+            url:'/admin/product/list',
             method:"get",
-            mock: true,
+            mock: false,
+            data:data
+        })
+    },
+
+    getGoodDetail(data){
+        return request({
+            url:'/admin/product/detail',
+            method:"get",
+            mock: false,
             data:data
         })
     },
 
     addGood(data){
         return request({
-            url:'/good/addgood',
+            url:'/admin/product/add',
             method:"post",
-            mock: true,
+            mock: false,
             data:data,
         })
     },
     deleteGood(data){
         return request({
-            url:'/good/deletegood',
+            url:'/admin/product/delete',
             method:"get",
-            mock: true,
+            mock: false,
             data:data,
+        })
+    },
+    editGood(data){
+        return request({
+            url:'/admin/product/update',
+            method:"post",
+            mock: false,
+            data:data,
+        })
+    },
+
+    // 图片上传
+    uploadImage(data) {
+        return request({
+            url: '/upload/images',
+            method: "post",
+            mock: false,
+            data: data,
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+    },
+    
+    // 图片清理
+    cleanupImages(data) {
+        return request({
+            url: '/admin/image/cleanup',
+            method: "post",
+            mock: false,
+            data: data
         })
     },
 

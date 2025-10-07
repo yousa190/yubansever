@@ -55,7 +55,7 @@ public class UserController {
     @Operation(summary = "用户注册", description = "用户注册接口，需要邮箱验证码")
     @PostMapping("/register")
     public Result regist(
-            @Parameter(description = "用户注册信息") @ModelAttribute UserData userData,
+            @Parameter(description = "用户注册信息") @ModelAttribute UserDto userData,
             @Parameter(description = "邮箱验证码", required = true) @RequestParam String code ){
 
         System.out.println(code);

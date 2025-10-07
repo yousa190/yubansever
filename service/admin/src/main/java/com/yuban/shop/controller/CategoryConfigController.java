@@ -27,7 +27,7 @@ public class CategoryConfigController {
     @Operation(summary = "获取分类配置列表", description = "分页获取分类配置列表，支持按分类名称搜索")
     @GetMapping("/list")
     public Result getList(
-            @Parameter(description = "分类名称，支持模糊搜索") @RequestParam(required = false,defaultValue = "") String catName,
+            @Parameter(description = "分类名称，支持模糊搜索") @RequestParam(required = false) String catName,
             @Parameter(description = "页码，从1开始") @RequestParam(defaultValue = "1") int page,
             @Parameter(description = "每页数量") @RequestParam(defaultValue = "10") int limit) {
         Page<SpecGroup> pageData = categoryConfigService.getList( catName, page, limit);

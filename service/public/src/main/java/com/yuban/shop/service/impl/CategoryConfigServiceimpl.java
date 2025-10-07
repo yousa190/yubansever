@@ -44,7 +44,7 @@ public class CategoryConfigServiceimpl extends ServiceImpl<CategoryConfigMapper,
     public Page<SpecGroup> getList(String catName, int page, int limit) {
         Page<SpecGroup> pageParam = new Page<>(page, limit);
         LambdaQueryWrapper<SpecGroup> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(catName!=null,SpecGroup::getCatName,catName);
+        queryWrapper.like(catName!=null,SpecGroup::getCatName,catName);
         return baseMapper.selectPage(pageParam,queryWrapper);
     }
 
