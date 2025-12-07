@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "home": "首页",
+    "user": "用户管理",
+    "mall": "商品管理",
+    "malllist": "商品列表",
+    "mallconfig": "分类参数",
+    "mallcategories": "商品分类",
+    "rights": "权限管理",
+    "rightsrolelist": "角色列表",
+    "rightsrightssetting": "权限管理",
+    "order": "订单管理",
+    "system": "系统管理",
+    "systembanner": "轮播图管理",
+    "systemhotgoods": "热门商品",
+    "systemadvertisement": "广告管理",
+    "systemreview": "评论管理"
+  }
+}

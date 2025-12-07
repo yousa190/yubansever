@@ -7,6 +7,7 @@ import com.yuban.shop.pojo.entity.Result;
 import com.yuban.shop.pojo.entity.UserData;
 import com.yuban.shop.pojo.vo.UserVo;
 import com.yuban.shop.service.UserService;
+import com.yuban.shop.pojo.enums.HttpCodeEnum;
 import io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -53,7 +54,7 @@ public class UserController {
         if (isAvailable) {
             return Result.success("用户名可用");
         } else {
-            return Result.error("用户名已被使用");
+            return Result.error(HttpCodeEnum.USERNAME_EXIST, "用户名已被使用");
         }
     }
 
@@ -64,7 +65,7 @@ public class UserController {
         if (isAvailable) {
             return Result.success("邮箱可用");
         } else {
-            return Result.error("邮箱已被使用");
+            return Result.error(HttpCodeEnum.EMAIL_ALREADY_USED, "邮箱已被使用");
         }
     }
 
@@ -116,7 +117,7 @@ public class UserController {
         if (result) {
             return Result.success("更新成功");
         } else {
-            return Result.error("更新失败");
+            return Result.error(HttpCodeEnum.SYSTEM_ERROR, "更新失败");
         }
     }
 
@@ -136,7 +137,7 @@ public class UserController {
         if (result) {
             return Result.success("操作成功");
         } else {
-            return Result.error("操作失败");
+            return Result.error(HttpCodeEnum.SYSTEM_ERROR, "操作失败");
         }
     }
 
@@ -149,7 +150,7 @@ public class UserController {
         if (result) {
             return Result.success("删除成功");
         } else {
-            return Result.error("删除失败");
+            return Result.error(HttpCodeEnum.SYSTEM_ERROR, "删除失败");
         }
     }
 

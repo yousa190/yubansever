@@ -16,6 +16,67 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `announcement`
+--
+
+DROP TABLE IF EXISTS `announcement`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `announcement` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '公告ID',
+  `title` varchar(255) NOT NULL COMMENT '公告标题',
+  `content` text COMMENT '公告内容',
+  `type` tinyint NOT NULL DEFAULT '0' COMMENT '公告类型(0:系统公告,1:商品相关)',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态(0:禁用,1:启用)',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公告表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `announcement`
+--
+
+LOCK TABLES `announcement` WRITE;
+/*!40000 ALTER TABLE `announcement` DISABLE KEYS */;
+/*!40000 ALTER TABLE `announcement` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `banner`
+--
+
+DROP TABLE IF EXISTS `banner`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `banner` (
+  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '横幅ID',
+  `title` varchar(255) NOT NULL COMMENT '横幅标题',
+  `image_url` varchar(500) NOT NULL COMMENT '横幅图片URL',
+  `target_type` tinyint NOT NULL COMMENT '跳转类型(0:公告,1:商品)',
+  `target_id` bigint NOT NULL COMMENT '目标ID(根据target_type关联announcement或product表)',
+  `sort_order` int DEFAULT '0' COMMENT '排序',
+  `status` tinyint NOT NULL DEFAULT '1' COMMENT '状态(0:禁用,1:启用)',
+  `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  `is_del` tinyint(1) DEFAULT '0' COMMENT '是否删除',
+  PRIMARY KEY (`id`),
+  KEY `idx_target` (`target_type`,`target_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='横幅表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `banner`
+--
+
+LOCK TABLES `banner` WRITE;
+/*!40000 ALTER TABLE `banner` DISABLE KEYS */;
+INSERT INTO `banner` VALUES (2,'test','http://localhost:8080/images/banner/436b2b683dd54353b19de48b0442f7acImage_1720446194277.jpg',1,1,0,0,'2025-12-07 12:26:26','2025-12-07 12:34:28',1);
+/*!40000 ALTER TABLE `banner` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `category`
 --
 
@@ -81,7 +142,7 @@ CREATE TABLE `product` (
   KEY `idx_is_hot` (`is_hot`),
   KEY `idx_is_on_sale` (`is_on_sale`),
   CONSTRAINT `fk_product_category` FOREIGN KEY (`cat_id`) REFERENCES `category` (`cat_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品表';
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +151,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'海尔冰箱BCD-258WDVMU1',1,'海尔',2999.00,3599.00,2200.00,100,50,'HP-258WDVMU1','海尔冰箱258升变频风冷无霜家用双门电冰箱','<p>海尔冰箱BCD-258WDVMU1，258升大容量，风冷无霜技术，变频压缩机，节能静音，多维精控，干湿分储。</p>',1,1,1,0,'台',1,'2025-10-01 10:00:00','2025-10-05 15:30:00','2025-10-02 09:00:00'),(2,'美的空调KFR-35GW/WDAA3@',1,'美的',2699.00,3199.00,2000.00,50,120,'MK-35GW-WDAA3','美的大1.5匹变频空调家用冷暖智能舒适型','<p>美的空调KFR-35GW/WDAA3@，大1.5匹，变频技术，自清洁功能，智能控制，舒适送风。</p>',1,0,1,0,'台',1,'2025-10-01 11:00:00','2025-10-06 10:15:00','2025-10-01 11:00:00'),(3,'小米电视EA50 2022款',1,'小米',1599.00,1899.00,1200.00,75,80,'MT-EA50-2022','小米50英寸4K超高清智能网络液晶平板电视机','<p>小米电视EA50 2022款，50英寸，4K分辨率，智能语音遥控，海量内容，金属机身。</p>',1,1,0,0,'台',1,'2025-10-02 09:30:00','2025-10-06 14:20:00','2025-10-03 08:45:00'),(4,'iPhone 15 Pro',2,'Apple',7999.00,8999.00,6000.00,30,25,'IP-15PRO','苹果iPhone 15 Pro (A3122) 128GB 钛金属原色','<p>iPhone 15 Pro，钛金属设计，A17 Pro芯片，4800万像素主摄，灵动岛，USB-C接口。</p>',1,1,1,0,'台',1,'2025-10-02 14:00:00','2025-10-06 16:45:00','2025-10-02 14:00:00'),(5,'华为Mate60 Pro',2,'华为',6999.00,7999.00,5200.00,20,35,'HM-Mate60Pro','华为Mate60 Pro卫星通信版 鸿蒙旗舰手机','<p>华为Mate60 Pro，卫星通话功能，麒麟9000S芯片，超光变摄像头，鸿蒙操作系统。</p>',1,0,1,0,'台',1,'2025-10-03 10:30:00','2025-10-06 11:20:00','2025-10-03 10:30:00'),(6,'小米13',2,'小米',3999.00,4499.00,3000.00,40,90,'XM-13','小米13 第二代骁龙8旗舰处理器 徕卡光学镜头','<p>小米13，第二代骁龙8处理器，徕卡专业光学镜头，6.36英寸直屏，5000mAh大电池。</p>',1,0,1,0,'台',1,'2025-10-03 15:45:00','2025-10-07 09:30:00','2025-10-03 15:45:00'),(7,'联想ThinkPad X1 Carbon',3,'联想',9999.00,11999.00,7500.00,15,12,'TP-X1C','联想ThinkPad X1 Carbon 2023款 14英寸轻薄商务笔记本','<p>ThinkPad X1 Carbon 2023款，第13代英特尔酷睿处理器，14英寸2.8K屏幕，轻至1.12kg，续航长达15.3小时。</p>',1,1,0,0,'台',1,'2025-10-04 09:15:00','2025-10-07 16:04:13','2025-10-04 09:00:00'),(8,'罗技G502 HERO鼠标',3,'罗技',299.00,399.00,180.00,100,65,'L-G502','罗技G502 HERO高性能游戏鼠标 16000DPI','<p>罗技G502 HERO鼠标，16000DPI，11个可编程按键，RGB灯效，人体工学设计。</p>',1,1,0,0,'个',1,'2025-10-04 11:30:00','2025-10-07 16:04:13','2025-10-04 11:00:00'),(9,'雷蛇黑寡妇蜘蛛V3',3,'雷蛇',699.00,899.00,500.00,35,28,'RZ-BlackWidow','雷蛇黑寡妇蜘蛛V3机械游戏键盘 绿轴','<p>雷蛇黑寡妇蜘蛛V3，绿轴机械按键，RGB背光，人体工学设计，专用软件定制。</p>',1,1,0,0,'个',1,'2025-10-04 13:45:00','2025-10-07 16:04:13','2025-10-04 13:00:00'),(10,'耐克男子运动T恤',4,'耐克',199.00,299.00,100.00,200,150,'NK-T恤-男','耐克NIKE男子运动T恤 Dri-FIT科技面料','<p>耐克男子运动T恤，Dri-FIT排汗技术，舒适剪裁，适合多种运动场合。</p>',1,1,0,0,'件',1,'2025-10-05 10:00:00','2025-10-07 16:04:13','2025-10-05 10:00:00'),(11,'阿迪达斯女子运动鞋',4,'阿迪达斯',499.00,699.00,300.00,75,88,'AD-运动鞋-女','阿迪达斯女子运动鞋 Cloudfoam技术缓震','<p>阿迪达斯女子运动鞋，Cloudfoam缓震技术，舒适内底，时尚外观，适合日常穿着。</p>',1,1,1,0,'双',1,'2025-10-05 14:30:00','2025-10-07 16:04:13','2025-10-05 14:00:00'),(12,'优衣库摇粒绒外套',4,'优衣库',129.00,199.00,60.00,150,210,'YY-摇粒绒外套','优衣库摇粒绒外套 保暖舒适 经典款','<p>优衣库摇粒绒外套，柔软保暖，轻便易携带，多种颜色可选，四季皆宜。</p>',1,1,1,0,'件',1,'2025-10-05 16:20:00','2025-10-07 16:04:13','2025-10-05 16:00:00'),(13,'阳澄湖大闸蟹',5,'阳澄湖',199.00,299.00,100.00,50,35,'YC-大闸蟹','阳澄湖大闸蟹 10只装 公蟹4两 母蟹3两','<p>阳澄湖大闸蟹，10只装，鲜活捕捞，黄满膏肥，附送蒸蟹工具和调料包。</p>',1,1,1,0,'盒',1,'2025-10-06 08:30:00','2025-10-07 16:04:13','2025-10-06 08:00:00'),(14,'进口车厘子',5,'智利',89.00,129.00,50.00,80,120,'JC-车厘子','智利进口车厘子 1kg 新鲜水果','<p>智利进口车厘子，JJ级大果，色泽鲜艳，口感香甜，空运直达，新鲜保证。</p>',1,1,1,0,'kg',1,'2025-10-06 11:15:00','2025-10-07 16:04:13','2025-10-06 11:00:00'),(15,'伊利纯牛奶',5,'伊利',49.90,59.90,30.00,200,310,'YL-纯牛奶','伊利纯牛奶 250ml*12盒 营养早餐奶','<p>伊利纯牛奶，12盒装，优质奶源，营养丰富，口感醇香，适合全家饮用。</p>',1,1,0,0,'箱',1,'2025-10-06 15:40:00','2025-10-07 16:04:13','2025-10-06 15:00:00'),(16,'testGood',105,'易购',20.00,10.00,1.00,200,200,'132133123','test','<p>null</p>',1,0,1,0,'件',1,'2025-10-07 15:58:03','2025-10-07 16:05:40',NULL);
+INSERT INTO `product` VALUES (1,'海尔冰箱BCD-258WDVMU1',1,'海尔',2999.00,3599.00,2200.00,100,50,'HP-258WDVMU1','海尔冰箱258升变频风冷无霜家用双门电冰箱','<p>海尔冰箱BCD-258WDVMU1，258升大容量，风冷无霜技术，变频压缩机，节能静音，多维精控，干湿分储。</p>',1,1,1,0,'台',1,'2025-10-01 10:00:00','2025-10-05 15:30:00','2025-10-02 09:00:00'),(2,'美的空调KFR-35GW/WDAA3@',1,'美的',2699.00,3199.00,2000.00,50,120,'MK-35GW-WDAA3','美的大1.5匹变频空调家用冷暖智能舒适型','<p>美的空调KFR-35GW/WDAA3@，大1.5匹，变频技术，自清洁功能，智能控制，舒适送风。</p>',1,0,1,0,'台',1,'2025-10-01 11:00:00','2025-10-06 10:15:00','2025-10-01 11:00:00'),(3,'小米电视EA50 2022款',1,'小米',1599.00,1899.00,1200.00,75,80,'MT-EA50-2022','小米50英寸4K超高清智能网络液晶平板电视机','<p>小米电视EA50 2022款，50英寸，4K分辨率，智能语音遥控，海量内容，金属机身。</p>',1,1,0,0,'台',1,'2025-10-02 09:30:00','2025-10-06 14:20:00','2025-10-03 08:45:00'),(4,'iPhone 15 Pro',2,'Apple',7999.00,8999.00,6000.00,30,25,'IP-15PRO','苹果iPhone 15 Pro (A3122) 128GB 钛金属原色','<p>iPhone 15 Pro，钛金属设计，A17 Pro芯片，4800万像素主摄，灵动岛，USB-C接口。</p>',1,1,1,0,'台',1,'2025-10-02 14:00:00','2025-10-06 16:45:00','2025-10-02 14:00:00'),(5,'华为Mate60 Pro',2,'华为',6999.00,7999.00,5200.00,20,35,'HM-Mate60Pro','华为Mate60 Pro卫星通信版 鸿蒙旗舰手机','<p>华为Mate60 Pro，卫星通话功能，麒麟9000S芯片，超光变摄像头，鸿蒙操作系统。</p>',1,0,1,0,'台',1,'2025-10-03 10:30:00','2025-10-06 11:20:00','2025-10-03 10:30:00'),(6,'小米13',2,'小米',3999.00,4499.00,3000.00,40,90,'XM-13','小米13 第二代骁龙8旗舰处理器 徕卡光学镜头','<p>小米13，第二代骁龙8处理器，徕卡专业光学镜头，6.36英寸直屏，5000mAh大电池。</p>',1,0,1,0,'台',1,'2025-10-03 15:45:00','2025-10-07 09:30:00','2025-10-03 15:45:00'),(7,'联想ThinkPad X1 Carbon',3,'联想',9999.00,11999.00,7500.00,15,12,'TP-X1C','联想ThinkPad X1 Carbon 2023款 14英寸轻薄商务笔记本','<p>ThinkPad X1 Carbon 2023款，第13代英特尔酷睿处理器，14英寸2.8K屏幕，轻至1.12kg，续航长达15.3小时。</p>',1,1,0,0,'台',1,'2025-10-04 09:15:00','2025-10-07 16:04:13','2025-10-04 09:00:00'),(8,'罗技G502 HERO鼠标',3,'罗技',299.00,399.00,180.00,100,65,'L-G502','罗技G502 HERO高性能游戏鼠标 16000DPI','<p>罗技G502 HERO鼠标，16000DPI，11个可编程按键，RGB灯效，人体工学设计。</p>',1,1,0,0,'个',1,'2025-10-04 11:30:00','2025-10-07 16:04:13','2025-10-04 11:00:00'),(9,'雷蛇黑寡妇蜘蛛V3',3,'雷蛇',699.00,899.00,500.00,35,28,'RZ-BlackWidow','雷蛇黑寡妇蜘蛛V3机械游戏键盘 绿轴','<p>雷蛇黑寡妇蜘蛛V3，绿轴机械按键，RGB背光，人体工学设计，专用软件定制。</p>',1,1,0,0,'个',1,'2025-10-04 13:45:00','2025-10-07 16:04:13','2025-10-04 13:00:00'),(10,'耐克男子运动T恤',4,'耐克',199.00,299.00,100.00,200,150,'NK-T恤-男','耐克NIKE男子运动T恤 Dri-FIT科技面料','<p>耐克男子运动T恤，Dri-FIT排汗技术，舒适剪裁，适合多种运动场合。</p>',1,1,0,0,'件',1,'2025-10-05 10:00:00','2025-10-07 16:04:13','2025-10-05 10:00:00'),(11,'阿迪达斯女子运动鞋',4,'阿迪达斯',499.00,699.00,300.00,75,88,'AD-运动鞋-女','阿迪达斯女子运动鞋 Cloudfoam技术缓震','<p>阿迪达斯女子运动鞋，Cloudfoam缓震技术，舒适内底，时尚外观，适合日常穿着。</p>',1,1,1,0,'双',1,'2025-10-05 14:30:00','2025-10-07 16:04:13','2025-10-05 14:00:00'),(12,'优衣库摇粒绒外套',4,'优衣库',129.00,199.00,60.00,150,210,'YY-摇粒绒外套','优衣库摇粒绒外套 保暖舒适 经典款','<p>优衣库摇粒绒外套，柔软保暖，轻便易携带，多种颜色可选，四季皆宜。</p>',1,1,1,0,'件',1,'2025-10-05 16:20:00','2025-10-07 16:04:13','2025-10-05 16:00:00'),(13,'阳澄湖大闸蟹',5,'阳澄湖',199.00,299.00,100.00,50,35,'YC-大闸蟹','阳澄湖大闸蟹 10只装 公蟹4两 母蟹3两','<p>阳澄湖大闸蟹，10只装，鲜活捕捞，黄满膏肥，附送蒸蟹工具和调料包。</p>',1,1,1,0,'盒',1,'2025-10-06 08:30:00','2025-10-07 16:04:13','2025-10-06 08:00:00'),(14,'进口车厘子',5,'智利',89.00,129.00,50.00,80,120,'JC-车厘子','智利进口车厘子 1kg 新鲜水果','<p>智利进口车厘子，JJ级大果，色泽鲜艳，口感香甜，空运直达，新鲜保证。</p>',1,1,1,0,'kg',1,'2025-10-06 11:15:00','2025-10-07 16:04:13','2025-10-06 11:00:00'),(15,'伊利纯牛奶',5,'伊利',49.90,59.90,30.00,200,310,'YL-纯牛奶','伊利纯牛奶 250ml*12盒 营养早餐奶','<p>伊利纯牛奶，12盒装，优质奶源，营养丰富，口感醇香，适合全家饮用。</p>',1,1,0,0,'箱',1,'2025-10-06 15:40:00','2025-10-07 16:04:13','2025-10-06 15:00:00'),(16,'testGood',105,'易购',20.00,10.00,1.00,200,200,'132133123','test','<p>null</p>',1,0,1,0,'件',1,'2025-10-07 15:00:00','2025-11-07 11:00:00','2025-11-07 11:00:00'),(17,'dsada',2,'dadas',0.00,0.00,0.00,0,0,'dsadasd','dad1','',0,0,0,1,'ke',1,'2025-12-07 10:16:15','2025-12-07 10:18:58',NULL),(18,'aa',2,'aaa',0.00,0.00,0.00,0,0,'aaa','','',1,0,0,0,'',1,'2025-12-07 10:00:00','2025-12-07 10:00:00',NULL);
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -111,7 +172,7 @@ CREATE TABLE `product_image` (
   PRIMARY KEY (`image_id`),
   KEY `idx_product_id` (`product_id`),
   CONSTRAINT `fk_image_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品图片表';
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品图片表';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -120,8 +181,37 @@ CREATE TABLE `product_image` (
 
 LOCK TABLES `product_image` WRITE;
 /*!40000 ALTER TABLE `product_image` DISABLE KEYS */;
-INSERT INTO `product_image` VALUES (1,1,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-01 10:05:00'),(2,1,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-01 10:05:00'),(3,1,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-01 10:05:00'),(4,2,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-01 11:05:00'),(5,2,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-01 11:05:00'),(6,3,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-02 09:35:00'),(7,3,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-02 09:35:00'),(8,3,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-02 09:35:00'),(9,4,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-02 14:05:00'),(10,4,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-02 14:05:00'),(11,4,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-02 14:05:00'),(12,5,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-03 10:35:00'),(13,5,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-03 10:35:00'),(14,6,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-03 15:50:00'),(15,6,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-03 15:50:00'),(16,6,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-03 15:50:00'),(17,7,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 09:20:00'),(18,7,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 09:20:00'),(19,8,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 11:35:00'),(20,8,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 11:35:00'),(21,9,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 13:50:00'),(22,9,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 13:50:00'),(23,10,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 10:05:00'),(24,10,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 10:05:00'),(25,11,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 14:35:00'),(26,11,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 14:35:00'),(27,12,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 16:25:00'),(28,12,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 16:25:00'),(29,13,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 08:35:00'),(30,13,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 08:35:00'),(31,14,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 11:20:00'),(32,14,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 11:20:00'),(33,15,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 15:45:00'),(34,15,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 15:45:00');
+INSERT INTO `product_image` VALUES (1,1,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-01 10:05:00'),(2,1,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-01 10:05:00'),(3,1,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-01 10:05:00'),(4,2,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-01 11:05:00'),(5,2,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-01 11:05:00'),(6,3,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-02 09:35:00'),(7,3,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-02 09:35:00'),(8,3,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-02 09:35:00'),(9,4,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-02 14:05:00'),(10,4,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-02 14:05:00'),(11,4,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-02 14:05:00'),(12,5,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-03 10:35:00'),(13,5,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-03 10:35:00'),(14,6,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-03 15:50:00'),(15,6,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-03 15:50:00'),(16,6,'http://localhost:8080/images/goods/default.jpg',3,0,'2025-10-03 15:50:00'),(17,7,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 09:20:00'),(18,7,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 09:20:00'),(19,8,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 11:35:00'),(20,8,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 11:35:00'),(21,9,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-04 13:50:00'),(22,9,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-04 13:50:00'),(23,10,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 10:05:00'),(24,10,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 10:05:00'),(25,11,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 14:35:00'),(26,11,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 14:35:00'),(27,12,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-05 16:25:00'),(28,12,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-05 16:25:00'),(29,13,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 08:35:00'),(30,13,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 08:35:00'),(31,14,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 11:20:00'),(32,14,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 11:20:00'),(33,15,'http://localhost:8080/images/goods/default.jpg',1,1,'2025-10-06 15:45:00'),(34,15,'http://localhost:8080/images/goods/default.jpg',2,0,'2025-10-06 15:45:00'),(35,16,'http://localhost:8080/images/goods/09532eb462df42bfb59a5fe44e46dd4d03e43b1c2be66baacc4bb385ed7191df.png',0,1,'2025-12-07 10:38:04'),(37,18,'http://localhost:8080/images/goods/169d7389bc4246faa7a53ecd1b36de59Image_1720446194277.jpg',0,1,'2025-12-07 11:03:22');
 /*!40000 ALTER TABLE `product_image` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `product_spec`
+--
+
+DROP TABLE IF EXISTS `product_spec`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product_spec` (
+  `spec_id` bigint NOT NULL AUTO_INCREMENT COMMENT '规格参数ID',
+  `product_id` bigint NOT NULL COMMENT '商品ID',
+  `spec_name` varchar(100) NOT NULL COMMENT '规格名称',
+  `spec_value` varchar(255) NOT NULL COMMENT '规格值',
+  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`spec_id`),
+  KEY `idx_product_id` (`product_id`),
+  CONSTRAINT `fk_product_spec_product` FOREIGN KEY (`product_id`) REFERENCES `product` (`product_id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品规格参数表';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product_spec`
+--
+
+LOCK TABLES `product_spec` WRITE;
+/*!40000 ALTER TABLE `product_spec` DISABLE KEYS */;
+/*!40000 ALTER TABLE `product_spec` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -140,7 +230,7 @@ CREATE TABLE `spec_group` (
   UNIQUE KEY `cat_name` (`cat_name`),
   KEY `cat_id` (`cat_id`),
   CONSTRAINT `spec_group_ibfk_1` FOREIGN KEY (`cat_id`) REFERENCES `category` (`cat_id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -149,7 +239,7 @@ CREATE TABLE `spec_group` (
 
 LOCK TABLES `spec_group` WRITE;
 /*!40000 ALTER TABLE `spec_group` DISABLE KEYS */;
-INSERT INTO `spec_group` VALUES (2,'服装鞋靴',4,'[{\"title\": \"1\", \"children\": []}]'),(4,'老人手机',31,'[{\"title\": \"型号\", \"children\": [{\"title\": \"型号a\"}]}, {\"title\": \"容量\", \"children\": [{\"title\": \"大容量\"}, {\"title\": \"小容量\"}, {\"title\": \"中容量\"}]}, {\"title\": \"品牌\", \"children\": []}]'),(5,'食品生鲜',5,'[{\"title\": \"a\", \"children\": []}]'),(6,'大家电',6,'[{\"title\": \"a\", \"children\": []}]');
+INSERT INTO `spec_group` VALUES (2,'服装鞋靴',4,'[{\"title\": \"1\", \"children\": []}]'),(4,'老人手机',31,'[{\"title\": \"型号\", \"children\": [{\"title\": \"型号a\"}]}, {\"title\": \"容量\", \"children\": [{\"title\": \"大容量\"}, {\"title\": \"小容量\"}, {\"title\": \"中容量\"}]}, {\"title\": \"品牌\", \"children\": []}]'),(5,'食品生鲜',5,'[{\"title\": \"a\", \"children\": []}]'),(6,'大家电',6,'[{\"title\": \"a\", \"children\": []}]'),(8,'1',105,'[{\"title\": \"a\", \"children\": []}, {\"title\": \"b\", \"children\": [{\"title\": \"b-a\"}, {\"title\": \"b-b\"}]}]');
 /*!40000 ALTER TABLE `spec_group` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -201,4 +291,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-10-07 17:18:44
+-- Dump completed on 2025-12-07 12:39:02

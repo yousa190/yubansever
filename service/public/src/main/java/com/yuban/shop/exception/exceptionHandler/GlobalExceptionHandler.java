@@ -2,6 +2,7 @@ package com.yuban.shop.exception.exceptionHandler;
 
 import com.yuban.shop.exception.SystemException;
 import com.yuban.shop.pojo.entity.Result;
+import com.yuban.shop.pojo.enums.HttpCodeEnum;
 import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
@@ -25,12 +26,12 @@ public class GlobalExceptionHandler   {
     @ExceptionHandler(RuntimeException.class)
     public Result handleRuntimeException(RuntimeException e) {
         logger.error("RuntimeException occurred: {}", e.getMessage(), e);
-        return Result.error(e.getMessage());
+        return Result.error(HttpCodeEnum.SYSTEM_ERROR, e.getMessage());
     }
 
     @ExceptionHandler(SystemException.class)
-    public Result handleException(Exception e) {
+    public Result handleSystemException(SystemException e) {
         logger.error("SystemException occurred: {}", e.getMessage(), e);
-        return Result.error(e.getMessage());
+        return Result.error(HttpCodeEnum.valueOf(e.getCode()), e.getMessage());
     }
 }
