@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping("/email")
+@RequestMapping("/admin/email")
 @Tag(name = "邮件服务接口", description = "邮件发送、验证码等相关接口")
 public class EmailController {
 

@@ -5,6 +5,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +31,12 @@ public class DownloadController {
     private String downloadPath;
 
     @Operation(summary = "下载图片文件", description = "根据类型和文件名下载对应的图片文件")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "文件下载成功", 
+            content = @Content(mediaType = "application/octet-stream")),
+        @ApiResponse(responseCode = "404", description = "文件不存在"),
+        @ApiResponse(responseCode = "500", description = "服务器内部错误")
+    })
     @RequestMapping("/images/{type}/{filename}")
     public void downloadimg(
             @Parameter(description = "图片类型：users(用户头像) 或 goods(商品图片)", required = true) @PathVariable String type,

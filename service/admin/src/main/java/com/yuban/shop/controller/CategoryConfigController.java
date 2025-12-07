@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Slf4j
 @RestController
-@RequestMapping("/mallConf")
+@RequestMapping("/admin/mallConf")
 @Tag(name = "后台分类参数相关接口", description = "分类配置管理相关接口")
 public class CategoryConfigController {
 

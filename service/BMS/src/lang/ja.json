@@ -1,0 +1,19 @@
+{
+  "menu": {
+    "home": "ホーム",
+    "user": "ユーザー管理",
+    "mall": "商品管理",
+    "malllist": "商品一覧",
+    "mallconfig": "分類パラメータ",
+    "mallcategories": "商品カテゴリ",
+    "rights": "権限管理",
+    "rightsrolelist": "ロール一覧",
+    "rightsrightssetting": "権限設定",
+    "order": "注文管理",
+    "system": "システム管理",
+    "systembanner": "バナー管理",
+    "systemhotgoods": "人気商品",
+    "systemadvertisement": "広告管理",
+    "systemreview": "レビュー管理"
+  }
+}

@@ -37,4 +37,12 @@ public interface ProductImageService extends IService<ProductImage> {
      * @return 是否设置成功
      */
     boolean setMainImage(Long imageId);
+    
+    /**
+     * 更新商品图片（比对后更新）
+     * @param productId 商品ID
+     * @param newImages 新的图片列表
+     * @return 是否更新成功
+     */
+    boolean updateProductImages(Long productId, List<ProductImage> newImages);
 }
